@@ -1,24 +1,19 @@
 // Fichier : models/index.mjs
 import { sequelize } from "../db/sequelize.mjs";
 import { DataTypes } from "sequelize";
-import { AuthorModel } from "./author.mjs";
-import { BooksModel } from "./books.mjs";
-import { CategoryModel } from "./category.mjs";
-import { EditorModel } from "./editor.mjs";
-import { CommentModel } from "./comment.mjs";
+import { ClanModel } from "./clan.mjs";
+import { RecompenseModel } from "./recompense.mjs";
 import { UserModel } from "./user.mjs";
 
-const Author = AuthorModel(sequelize, DataTypes);
-const Book = BooksModel(sequelize, DataTypes);
-const Editor = EditorModel(sequelize, DataTypes);
-const Comment = CommentModel(sequelize, DataTypes);
-const Category = CategoryModel(sequelize, DataTypes);
+const Clan = ClanModel(sequelize, DataTypes);
+const Recompense = RecompenseModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
 
 // Définir ici toutes les associations
-Book.belongsTo(Author, { foreignKey: "authorId", as: "authorDetails" });
+User.belongsTo(Clan, { foreignkey: "clanId", as: "clandetail" });
+/*Book.belongsTo(Author, { foreignKey: "authorId", as: "authorDetails" });
 Book.belongsTo(Editor, { foreignKey: "editorId", as: "editorDetails" });
-Book.belongsTo(Category, { foreignKey: "categoryId", as: "categoryDetails" });
+Book.belongsTo(Category, { foreignKey: "categoryId", as: "categoryDetails" });*/
 // Ajouter d'autres associations si nécessaire
 
-export { Author, Book, Editor, Comment, Category, User, sequelize };
+export { Clan, Recompense, User, sequelize };

@@ -1,13 +1,13 @@
-export const EditorModel = (sequelize, DataTypes) => {
+export const RecompenseModel = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Editor",
+    "Recompense",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      nameEdit: {
+      nom: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -22,6 +22,10 @@ export const EditorModel = (sequelize, DataTypes) => {
             msg: "Le nom est une propriété obligatoire",
           },
         },
+      },
+      image: {
+        type: DataTypes.BLOB,
+        allowNull: false,
       },
     },
     {
