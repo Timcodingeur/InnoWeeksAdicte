@@ -1,13 +1,13 @@
-export const EditorModel = (sequelize, DataTypes) => {
+export const ClanModel = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Editor",
+    "Clan",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      nameEdit: {
+      nom: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {

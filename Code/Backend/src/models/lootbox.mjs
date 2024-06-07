@@ -1,18 +1,15 @@
-export const CategoryModel = (sequelize, DataTypes) => {
+export const LootboxModel = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Category",
+    "Lootbox",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      name: {
+      nom: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: {
-          msg: "Ce nom est déjà pris.",
-        },
         validate: {
           is: {
             args: /^[^?!]+$/,
@@ -21,7 +18,14 @@ export const CategoryModel = (sequelize, DataTypes) => {
           notEmpty: {
             msg: "Le nom ne peut pas être vide.",
           },
+          notNull: {
+            msg: "Le nom est une propriété obligatoire",
+          },
         },
+      },
+      prix: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {

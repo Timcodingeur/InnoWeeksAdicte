@@ -1,13 +1,13 @@
-export const AuthorModel = (sequelize, DataTypes) => {
+export const TaskModel = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Author",
+    "Task",
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      firstname: {
+      nom: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -16,14 +16,14 @@ export const AuthorModel = (sequelize, DataTypes) => {
             msg: "Les caractères spéciaux comme ?! ne sont pas autorisés, à l'exception des espaces, - et _.",
           },
           notEmpty: {
-            msg: "Le prénom ne peut pas être vide.",
+            msg: "Le nom ne peut pas être vide.",
           },
           notNull: {
-            msg: "Le prénom est une propriété obligatoire",
+            msg: "Le nom est une propriété obligatoire",
           },
         },
       },
-      lastname: {
+      description: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
@@ -32,12 +32,16 @@ export const AuthorModel = (sequelize, DataTypes) => {
             msg: "Les caractères spéciaux comme ?! ne sont pas autorisés, à l'exception des espaces, - et _.",
           },
           notEmpty: {
-            msg: "Le nom de famille ne peut pas être vide",
+            msg: "Le nom ne peut pas être vide.",
           },
           notNull: {
-            msg: "Le prenom est une propriété obligatoire",
+            msg: "Le nom est une propriété obligatoire",
           },
         },
+      },
+      nbpoints: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {
