@@ -1,4 +1,4 @@
-export let contenirs = [
+export let contenir = [
   {
     idLootbox: 1,
     idRecompense: 1,

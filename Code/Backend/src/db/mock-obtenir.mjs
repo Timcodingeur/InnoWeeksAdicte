@@ -1,4 +1,4 @@
-export let obtenirs = [
+export let obtenir = [
   {
     idUser: 1,
     idRecompense: 1,

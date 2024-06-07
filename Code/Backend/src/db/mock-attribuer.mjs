@@ -1,4 +1,4 @@
-export let attribuers = [
+export let attribuer = [
   {
     idUser: 1,
     idTask: 1,
