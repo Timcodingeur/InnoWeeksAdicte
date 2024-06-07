@@ -23,7 +23,7 @@ import { recompenses } from "./mock-recompenses.mjs";
 import { tasks } from "./mock-task.mjs";
 import { users } from "./mock-users.mjs";
 
-const sequelize = new Sequelize("db_ouvrage", "root", "root", {
+const sequelize = new Sequelize("db_adictive", "root", "root", {
   host: "localhost",
   port: 6033,
   dialect: "mysql",
@@ -83,17 +83,18 @@ const importUsers = async () => {
     await User.create({
       username: user.username,
       password: hash,
-      firstname: user.firstname,
-      lastname: user.lastname,
       email: user.email,
       point: user.point,
       level: user.level,
       photo: user.photo,
       isadmin: user.isadmin,
       fkclan: user.fkclan,
+      name: user.name,
+      familyname: user.familyname
     });
   }
 };
+
 
 const importRecompenses = async () => {
   for (const recompense of recompenses) {
@@ -128,26 +129,35 @@ const importContenir = async () => {
     await Contenir.create({
       idLootbox: entry.idLootbox,
       idRecompense: entry.idRecompense,
+      LootboxId: entry.idLootbox,
+      RecompenseId: entry.idRecompense,
     });
   }
 };
+
 
 const importObtenir = async () => {
   for (const entry of obtenir) {
     await Obtenir.create({
       idUser: entry.idUser,
       idRecompense: entry.idRecompense,
+      UserId: entry.idUser,
+      RecompenseId: entry.idRecompense,
     });
   }
 };
+
 
 const importOuvrir = async () => {
   for (const entry of ouvrir) {
     await Ouvrir.create({
       idUser: entry.idUser,
       idLootbox: entry.idLootbox,
+      UserId: entry.idUser,
+      LootboxId: entry.idLootbox,
     });
   }
 };
+
 
 export { sequelize, initDb, Attribuer, Clan, Contenir, Lootbox, Obtenir, Ouvrir, Recompense, Task, User };
