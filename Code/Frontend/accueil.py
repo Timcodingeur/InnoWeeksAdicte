@@ -61,15 +61,10 @@ if logo_img:
     logo_label.pack(side="left", padx=0, pady=0)
 
 # Ajout des icônes utilisateur à droite du header
-user_icon_img = resize_image(os.path.join(images_path, "Panier.png"), 50)
+user_icon_img = resize_image(os.path.join(images_path, "Connection.png"), 50)
 if user_icon_img:
     user_icon_label = tk.Label(header_frame, image=user_icon_img, bg="#313131", bd=0)
     user_icon_label.pack(side="right", padx=10)
-
-settings_icon_img = resize_image(os.path.join(images_path, "Image niveau.png"), 50)
-if settings_icon_img:
-    settings_icon_label = tk.Label(header_frame, image=settings_icon_img, bg="#313131", bd=0)
-    settings_icon_label.pack(side="right", padx=10)
 
 # Création du cadre pour le footer
 footer_frame = tk.Frame(root, bg="#313131", height=30, bd=0, highlightthickness=0)
@@ -96,16 +91,15 @@ points_label = tk.Label(info_frame, text="500", font=("Helvetica", 12), fg="whit
 points_label.pack()
 
 # Ajout des boutons avec des icônes dans la barre latérale
-icons = ["Accueil", "Panier", "Clan", "Liste tâches", "Croix", "Nouveau Bouton 1", "Nouveau Bouton 2"]
-icon_files = ["Accueil.webp", "Panier.png", "Clan.webp", "Liste tâches.png", "Croix.png", "Panier.png", "Panier.png"]
-
+icons = ["Accueil", "Panier", "Clan", "Liste tâches","Classement", "Croix"]
+icon_files = ["Accueil.webp", "Panier.png",  "Clan.webp", "Liste tâches.png","Classement.png", "Croix.png"]
 buttons = []
 for i, icon in enumerate(icons):
     img = resize_image(os.path.join(images_path, icon_files[i]), 50)
     if img:
         canvas = tk.Canvas(sidebar_frame, width=80, height=80, bg="#101010", highlightthickness=0, bd=0)
         canvas.pack(pady=10, padx=10)
-        color = "#D5CFE1" if i < 5 else ("#E83030" if i == 6 else "#D5CFE1")
+        color = "#D5CFE1" if i < 5 else ("#E83030" if i == 5 else "#D5CFE1")
         create_rounded_rectangle(canvas, 5, 5, 75, 75, radius=10, fill=color, outline="")
         canvas.create_image(40, 40, image=img)
         canvas.image = img  # Pour éviter que l'image ne soit détruite par le garbage collector
@@ -123,7 +117,7 @@ class AccueilPage(tk.Frame):
         label.pack(pady=10, padx=10)
         desc = tk.Label(card, text="Nombre de point de la mission\nAction à finir pour la tâche courante", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
-        button = tk.Button(card, text="Button", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["TachePage"]), relief="flat", bd=0)
+        button = tk.Button(card, text="demander à valider la tache", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["TachePage"]), relief="flat", bd=0)
         button.pack(pady=20, padx=10)
         button.config(bd=2, relief="solid", highlightbackground="#E83030", highlightthickness=2, pady=5, padx=5)
 
