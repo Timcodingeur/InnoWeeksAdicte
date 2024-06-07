@@ -91,23 +91,25 @@ points_label = tk.Label(info_frame, text="500", font=("Helvetica", 12), fg="whit
 points_label.pack()
 
 # Ajout des boutons avec des icônes dans la barre latérale
-icons = ["Accueil", "Panier", "Clan", "Liste tâches","Classement", "Croix"]
-icon_files = ["Accueil.webp", "Panier.png",  "Clan.webp", "Liste tâches.png","Classement.png", "Croix.png"]
+icons = [("Accueil", "Accueil.webp"), ("Panier", "Panier.png"), ("Clan", "Clan.webp"), ("Tache", "Liste_taches.png"), ("Classement", "Classement.png"), ("Croix", "Sortir.png")]
 buttons = []
-for i, icon in enumerate(icons):
-    img = resize_image(os.path.join(images_path, icon_files[i]), 50)
+for icon, icon_file in icons:
+    img = resize_image(os.path.join(images_path, icon_file), 50)
     if img:
         canvas = tk.Canvas(sidebar_frame, width=80, height=80, bg="#101010", highlightthickness=0, bd=0)
         canvas.pack(pady=10, padx=10)
-        color = "#D5CFE1" if i < 5 else ("#E83030" if i == 5 else "#D5CFE1")
+        color = "#D5CFE1" if icon != "Croix" else "#E83030"
         create_rounded_rectangle(canvas, 5, 5, 75, 75, radius=10, fill=color, outline="")
         canvas.create_image(40, 40, image=img)
         canvas.image = img  # Pour éviter que l'image ne soit détruite par le garbage collector
-        canvas.bind("<Button-1>", lambda event, i=i: show_frame(frames[icons[i]]))
+        if icon == "Croix":
+            canvas.bind("<Button-1>", lambda event: root.destroy())
+        else:
+            canvas.bind("<Button-1>", lambda event, icon=icon: show_frame(frames[icon]))
         buttons.append(canvas)
 
 # Définition des classes pour les pages
-class AccueilPage(tk.Frame):
+class Accueil(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         card = tk.Frame(self, bg="#D5CFE1", bd=0, highlightthickness=0)
@@ -117,49 +119,67 @@ class AccueilPage(tk.Frame):
         label.pack(pady=10, padx=10)
         desc = tk.Label(card, text="Nombre de point de la mission\nAction à finir pour la tâche courante", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
-        button = tk.Button(card, text="demander à valider la tache", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["TachePage"]), relief="flat", bd=0)
+        button = tk.Button(card, text="demander à valider la tache", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["Tache"]), relief="flat", bd=0)
         button.pack(pady=20, padx=10)
         button.config(bd=2, relief="solid", highlightbackground="#E83030", highlightthickness=2, pady=5, padx=5)
 
-class TachePage(tk.Frame):
+class Tache(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
-        label = tk.Label(self, text="Page de tâche", font=("Helvetica", 14), bg="#D5CFE1", fg
-="black", bd=0)
+        label = tk.Label(self, text="Page de tâche", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        # Ajoutez ici les composants spécifiques à la page de tâche
+        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc.pack(pady=10, padx=10)
 
-class ConnexionPage(tk.Frame):
+class Connexion(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         label = tk.Label(self, text="Connexion", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        # Ajoutez ici les composants spécifiques à la page de connexion
+        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc.pack(pady=10, padx=10)
 
-class LootboxPage(tk.Frame):
+class Lootbox(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         label = tk.Label(self, text="Page de Lootbox", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        # Ajoutez ici les composants spécifiques à la page de lootbox
+        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc.pack(pady=10, padx=10)
 
-class ClassementPage(tk.Frame):
+class Classement(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         label = tk.Label(self, text="Page de Classement", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        # Ajoutez ici les composants spécifiques à la page de classement
+        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc.pack(pady=10, padx=10)
+
+class Clan(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
+        label = tk.Label(self, text="Page de Clan", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label.pack(pady=10, padx=10)
+        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc.pack(pady=10, padx=10)
+
+class Panier(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
+        label = tk.Label(self, text="Page de Panier", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label.pack(pady=10, padx=10)
+        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc.pack(pady=10, padx=10)
 
 # Création des pages
 frames = {}
-for F in (AccueilPage, TachePage, ConnexionPage, LootboxPage, ClassementPage):
+for F in (Accueil, Tache, Connexion, Lootbox, Classement, Clan, Panier):
     page_name = F.__name__
-    frame = F(parent=container, controller=root)
-    frames[page_name] = frame
-    frame.grid(row=0, column=0, sticky="nsew")
+    frames[page_name] = F(parent=container, controller=root)
+    frames[page_name].grid(row=0, column=0, sticky="nsew")
 
 # Affichage initial de la page d'accueil
-show_frame(frames["AccueilPage"])
+show_frame(frames["Accueil"])
 
 # Lancement de la boucle principale de l'application
 root.mainloop()
