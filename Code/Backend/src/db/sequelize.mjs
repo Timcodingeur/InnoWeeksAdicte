@@ -22,6 +22,7 @@ import { ouvrir } from "./mock-ouvrir.mjs";
 import { recompenses } from "./mock-recompenses.mjs";
 import { tasks } from "./mock-task.mjs";
 import { users } from "./mock-users.mjs";
+import { attribuer } from "./mock-attribuer.mjs"; // Ajout du mock attribuer
 
 const sequelize = new Sequelize("db_adictive", "root", "root", {
   host: "localhost",
@@ -41,21 +42,24 @@ const Task = TaskModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
 
 // Définir les associations
-User.belongsTo(Clan, { foreignKey: "clanId", as: "clandetail" });
-User.belongsToMany(Recompense, { through: Obtenir });
-Recompense.belongsToMany(User, { through: Obtenir });
-Recompense.belongsToMany(Lootbox, { through: Contenir });
-Lootbox.belongsToMany(Recompense, { through: Contenir });
-Lootbox.belongsToMany(User, { through: Ouvrir });
-User.belongsToMany(Lootbox, { through: Ouvrir });
-Task.belongsToMany(User, { through: Attribuer });
-User.belongsToMany(Task, { through: Attribuer });
+User.belongsTo(Clan, { foreignKey: "fkclan", as: "clandetail" });
+User.belongsToMany(Recompense, { through: Obtenir, foreignKey: 'idUser', otherKey: 'idRecompense' });
+Recompense.belongsToMany(User, { through: Obtenir, foreignKey: 'idRecompense', otherKey: 'idUser' });
+Recompense.belongsToMany(Lootbox, { through: Contenir, foreignKey: 'idRecompense', otherKey: 'idLootbox' });
+Lootbox.belongsToMany(Recompense, { through: Contenir, foreignKey: 'idLootbox', otherKey: 'idRecompense' });
+Lootbox.belongsToMany(User, { through: Ouvrir, foreignKey: 'idLootbox', otherKey: 'idUser' });
+User.belongsToMany(Lootbox, { through: Ouvrir, foreignKey: 'idUser', otherKey: 'idLootbox' });
+Task.belongsToMany(User, { through: Attribuer, foreignKey: 'idTask', otherKey: 'idUser' });
+User.belongsToMany(Task, { through: Attribuer, foreignKey: 'idUser', otherKey: 'idTask' });
 
 const initDb = () => {
-  return sequelize.sync({ force: true }).then(async (_) => {
-    await importData();
-    console.log("La base de données db_ouvrage a bien été synchronisée");
-  });
+  return sequelize.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true })
+    .then(() => sequelize.sync({ force: true }))
+    .then(() => sequelize.query('SET FOREIGN_KEY_CHECKS = 1', { raw: true }))
+    .then(async (_) => {
+      await importData();
+      console.log("La base de données db_adictive a bien été synchronisée");
+    });
 };
 
 const importData = async () => {
@@ -67,6 +71,7 @@ const importData = async () => {
   await importContenir();
   await importObtenir();
   await importOuvrir();
+  await importAttribuer(); // Ajout de l'importation attribuer
 };
 
 const importClans = async () => {
@@ -94,7 +99,6 @@ const importUsers = async () => {
     });
   }
 };
-
 
 const importRecompenses = async () => {
   for (const recompense of recompenses) {
@@ -135,9 +139,12 @@ const importContenir = async () => {
   }
 };
 
-
 const importObtenir = async () => {
   for (const entry of obtenir) {
+    if (!entry.idUser || !entry.idRecompense) {
+      console.error('Invalid data in mock-obtenir:', entry);
+      continue;
+    }
     await Obtenir.create({
       idUser: entry.idUser,
       idRecompense: entry.idRecompense,
@@ -147,9 +154,12 @@ const importObtenir = async () => {
   }
 };
 
-
 const importOuvrir = async () => {
   for (const entry of ouvrir) {
+    if (!entry.idUser || !entry.idLootbox) {
+      console.error('Invalid data in mock-ouvrir:', entry);
+      continue;
+    }
     await Ouvrir.create({
       idUser: entry.idUser,
       idLootbox: entry.idLootbox,
@@ -159,5 +169,19 @@ const importOuvrir = async () => {
   }
 };
 
+const importAttribuer = async () => {
+  for (const entry of attribuer) {
+    if (!entry.idUser || !entry.idTask) {
+      console.error('Invalid data in mock-attribuer:', entry);
+      continue;
+    }
+    await Attribuer.create({
+      idUser: entry.idUser,
+      idTask: entry.idTask,
+      UserId: entry.idUser,
+      TaskId: entry.idTask,
+    });
+  }
+};
 
 export { sequelize, initDb, Attribuer, Clan, Contenir, Lootbox, Obtenir, Ouvrir, Recompense, Task, User };

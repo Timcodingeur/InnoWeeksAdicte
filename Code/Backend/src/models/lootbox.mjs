@@ -1,6 +1,6 @@
 export const LootboxModel = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Lootbox",
+    "Lootboxs",
     {
       id: {
         type: DataTypes.INTEGER,
