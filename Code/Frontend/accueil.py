@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import os
+import requests
 
 # Création de la fenêtre principale
 root = tk.Tk()
@@ -108,6 +109,17 @@ for icon, icon_file in icons:
             canvas.bind("<Button-1>", lambda event, icon=icon: show_frame(frames[icon]))
         buttons.append(canvas)
 
+# Fonction pour récupérer les données des clans depuis l'API
+def fetch_clans():
+    url = "http://localhost:3000/api/clans"
+    headers = {"Authorization": "Bearer YOUR_BEARER_TOKEN_HERE"}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        data = response.json()
+        return data['data']
+    else:
+        return "Erreur lors de la récupération des données."
+
 # Définition des classes pour les pages
 class Accueil(tk.Frame):
     def __init__(self, parent, controller):
@@ -117,7 +129,17 @@ class Accueil(tk.Frame):
 
         label = tk.Label(card, text="Nom de la tâche courante", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(card, text="Nombre de point de la mission\nAction à finir pour la tâche courante", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+
+        # Récupérer les données des clans
+        clans = fetch_clans()
+        desc_text = ""
+        if isinstance(clans, str):
+            desc_text = clans
+        else:
+            for clan in clans:
+                desc_text += f"{clan['name']} - {clan['description']}\n"
+        
+        desc = tk.Label(card, text=desc_text, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
         button = tk.Button(card, text="demander à valider la tache", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["Tache"]), relief="flat", bd=0)
         button.pack(pady=20, padx=10)
