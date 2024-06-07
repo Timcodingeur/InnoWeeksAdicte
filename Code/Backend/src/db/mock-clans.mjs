@@ -1,4 +1,4 @@
-export let authors = [
+export let clans = [
   {
     id: 1,
     nom: "Informatique",

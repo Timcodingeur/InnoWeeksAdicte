@@ -1,4 +1,4 @@
-export let books = [
+export let recompenses = [
   {
     id: 1,
     nom: "OnePiece n°1",
