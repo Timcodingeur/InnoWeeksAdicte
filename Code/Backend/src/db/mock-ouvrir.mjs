@@ -1,4 +1,4 @@
-export let ouvrirs = [
+export let ouvrir = [
   {
     idLootbox: 1,
     idRecompense: 1,
