@@ -20,7 +20,13 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+
+const corsOptions = {
+  origin: '0.0.0.0', 
+  credentials: true
+};
+app.use(cors(corsOptions));
 
 app.use(
   "/api-docs",
@@ -55,8 +61,7 @@ app.use("/api/recompenses", recompensesRouter);
 app.use("/api/tasks", tasksRouter);
 app.use("/api/users", usersRouter);
 
-
-app.listen(port, () => {
+app.listen(port,() => {
   console.log(`Example app listening on port ${port}`);
 });
 

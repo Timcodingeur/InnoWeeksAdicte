@@ -1,8 +1,8 @@
+import requests
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import os
-import requests
 
 # Création de la fenêtre principale
 root = tk.Tk()
@@ -112,13 +112,14 @@ for icon, icon_file in icons:
 # Fonction pour récupérer les données des clans depuis l'API
 def fetch_clans():
     url = "http://localhost:3000/api/clans"
-    headers = {"Authorization": "Bearer YOUR_BEARER_TOKEN_HERE"}
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
+    headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTcxNzc3MDI2MywiZXhwIjoxNzQ5MzI3ODYzfQ.KUrhF_4F2Eu68m2gPophQG4bcUYF9ds9xitQadisHjA"}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
         data = response.json()
         return data['data']
-    else:
-        return "Erreur lors de la récupération des données."
+    except requests.exceptions.RequestException as e:
+        return f"Erreur lors de la récupération des données: {e}"
 
 # Définition des classes pour les pages
 class Accueil(tk.Frame):
@@ -137,7 +138,7 @@ class Accueil(tk.Frame):
             desc_text = clans
         else:
             for clan in clans:
-                desc_text += f"{clan['name']} - {clan['description']}\n"
+                desc_text += f"{clan['nom']} - {clan['description']}\n"
         
         desc = tk.Label(card, text=desc_text, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
