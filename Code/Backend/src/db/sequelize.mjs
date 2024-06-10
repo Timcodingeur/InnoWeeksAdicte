@@ -78,6 +78,7 @@ const importClans = async () => {
   for (const clan of clans) {
     await Clan.create({
       nom: clan.nom,
+      description: clan.description,
     });
   }
 };

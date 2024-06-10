@@ -23,6 +23,10 @@ export const ClanModel = (sequelize, DataTypes) => {
           },
         },
       },
+      description:{
+        type: DataTypes.STRING,
+        allowNull: false,
+      }
     },
     {
       timestamps: true,

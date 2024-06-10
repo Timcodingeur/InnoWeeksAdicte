@@ -1,3 +1,4 @@
+import requests
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -108,6 +109,18 @@ for icon, icon_file in icons:
             canvas.bind("<Button-1>", lambda event, icon=icon: show_frame(frames[icon]))
         buttons.append(canvas)
 
+# Fonction pour récupérer les données des clans depuis l'API
+def fetch_clans():
+    url = "http://localhost:3000/api/clans"
+    headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTcxNzc3MDI2MywiZXhwIjoxNzQ5MzI3ODYzfQ.KUrhF_4F2Eu68m2gPophQG4bcUYF9ds9xitQadisHjA"}
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return data['data']
+    except requests.exceptions.RequestException as e:
+        return f"Erreur lors de la récupération des données: {e}"
+
 # Définition des classes pour les pages
 class Accueil(tk.Frame):
     def __init__(self, parent, controller):
@@ -117,7 +130,17 @@ class Accueil(tk.Frame):
 
         label = tk.Label(card, text="Nom de la tâche courante", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(card, text="Nombre de point de la mission\nAction à finir pour la tâche courante", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+
+        # Récupérer les données des clans
+        clans = fetch_clans()
+        desc_text = ""
+        if isinstance(clans, str):
+            desc_text = clans
+        else:
+            for clan in clans:
+                desc_text += f"{clan['nom']} - {clan['description']}\n"
+        
+        desc = tk.Label(card, text=desc_text, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
         button = tk.Button(card, text="demander à valider la tache", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["Tache"]), relief="flat", bd=0)
         button.pack(pady=20, padx=10)
