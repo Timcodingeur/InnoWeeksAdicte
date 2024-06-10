@@ -9,11 +9,18 @@ const tasksRouter = express.Router();
 // Route pour récupérer toutes les tâches
 tasksRouter.get("/", auth, async (req, res) => {
   try {
-    const tasks = await Task.findAll({ order: [["created", "DESC"]] });
-    const message = "La liste des tâches a bien été récupérée.";
+    const tasks = await Task.findAll({
+      where: {
+        assignedUserId: {
+          [Op.is]: null
+        }
+      },
+      order: [["created", "DESC"]]
+    });
+    const message = "La liste des tâches non assignées a bien été récupérée.";
     res.json(success(message, tasks));
   } catch (error) {
-    const message = "La liste des tâches n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
+    const message = "La liste des tâches non assignées n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
     res.status(500).json({ message, data: error });
   }
 });
@@ -21,7 +28,9 @@ tasksRouter.get("/", auth, async (req, res) => {
 // Route pour récupérer une tâche par ID
 tasksRouter.get("/:id", auth, async (req, res) => {
   try {
-    const task = await Task.findByPk(req.params.id);
+    const task = await Task.findByPk(req.params.id, {
+      include: [{ model: User, as: "assignedUser" }]
+    });
     if (!task) {
       const message = "La tâche demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
       return res.status(404).json({ message });
@@ -54,7 +63,9 @@ tasksRouter.put("/:id", auth, async (req, res) => {
   try {
     const taskId = req.params.id;
     await Task.update(req.body, { where: { id: taskId } });
-    const updatedTask = await Task.findByPk(taskId);
+    const updatedTask = await Task.findByPk(taskId, {
+      include: [{ model: User, as: "assignedUser" }]
+    });
     if (!updatedTask) {
       const message = "La tâche demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
       return res.status(404).json({ message });
@@ -87,74 +98,40 @@ tasksRouter.delete("/:id", auth, async (req, res) => {
   }
 });
 
-// Route pour créer une nouvelle attribution
+// Route pour créer une nouvelle attribution (ancienne association de tâches à des utilisateurs)
 tasksRouter.post("/:taskId/assign", auth, async (req, res) => {
   try {
     const { taskId } = req.params;
     const { userId } = req.body;
-    const newAttribution = await Attribuer.create({ idTask: taskId, idUser: userId });
-    const message = "Une nouvelle attribution a bien été créée.";
-    res.json(success(message, newAttribution));
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(400).json({ message: error.message, data: error });
+    const task = await Task.findByPk(taskId);
+    if (!task) {
+      const message = "La tâche demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
+      return res.status(404).json({ message });
     }
-    const message = "L'attribution n'a pas pu être créée. Merci de réessayer dans quelques instants.";
+    await task.update({ assignedUserId: userId });
+    const message = "La tâche a bien été assignée à l'utilisateur.";
+    res.json(success(message, task));
+  } catch (error) {
+    const message = "La tâche n'a pas pu être assignée. Merci de réessayer dans quelques instants.";
     res.status(500).json({ message, data: error });
   }
 });
 
-// Route pour récupérer toutes les attributions d'une tâche
+// Route pour récupérer toutes les attributions d'une tâche (non nécessaire avec la nouvelle association directe)
 tasksRouter.get("/:taskId/assign", auth, async (req, res) => {
   try {
     const { taskId } = req.params;
-    const attributions = await Attribuer.findAll({
-      where: { idTask: taskId },
-      include: [{ model: User, as: "userDetails" }],
+    const task = await Task.findByPk(taskId, {
+      include: [{ model: User, as: "assignedUser" }]
     });
-    const message = "La liste des attributions a bien été récupérée.";
-    res.json(success(message, attributions));
-  } catch (error) {
-    const message = "La liste des attributions n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
-
-// Route pour mettre à jour une attribution
-tasksRouter.put("/:taskId/assign/:id", auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    await Attribuer.update(req.body, { where: { id } });
-    const updatedAttribution = await Attribuer.findByPk(id);
-    if (!updatedAttribution) {
-      const message = "L'attribution demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
+    if (!task) {
+      const message = "La tâche demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
       return res.status(404).json({ message });
     }
-    const message = "L'attribution a bien été mise à jour.";
-    res.json(success(message, updatedAttribution));
+    const message = "Les attributions de la tâche ont bien été récupérées.";
+    res.json(success(message, task));
   } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(400).json({ message: error.message, data: error });
-    }
-    const message = "L'attribution n'a pas pu être mise à jour. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
-
-// Route pour supprimer une attribution
-tasksRouter.delete("/:taskId/assign/:id", auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const attribution = await Attribuer.findByPk(id);
-    if (!attribution) {
-      const message = "L'attribution demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    await Attribuer.destroy({ where: { id } });
-    const message = "L'attribution a bien été supprimée.";
-    res.json(success(message, attribution));
-  } catch (error) {
-    const message = "L'attribution n'a pas pu être supprimée. Merci de réessayer dans quelques instants.";
+    const message = "Les attributions n'ont pas pu être récupérées. Merci de réessayer dans quelques instants.";
     res.status(500).json({ message, data: error });
   }
 });

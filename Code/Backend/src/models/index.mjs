@@ -22,19 +22,19 @@ const Contenir = ContenirModel(sequelize, DataTypes);
 const Attribuer = AttribuerModel(sequelize, DataTypes);
 
 // Définir ici toutes les associations
-User.belongsTo(Clan, { foreignkey: "clanId", as: "clandetail" });
+Clan.hasMany(User, { foreignKey: 'fkclan', as: 'users' });
+User.belongsTo(Clan, { foreignkey: "fkclan", as: "clandetail" });
+
 User.belongsToMany(Recompense, { through: "Obtenir" });
 Recompense.belongsToMany(User, { through: "Obtenir" });
+
 Recompense.belongsToMany(Lootbox, { through: "Contenir" });
 Lootbox.belongsToMany(Recompense, { through: "Contenir" });
+
 Lootbox.belongsToMany(User, { through: "Ouvrir" });
 User.belongsToMany(Lootbox, { through: "Ouvrir" });
-Task.belongsToMany(User, { through: "Attribuer" });
-User.belongsToMany(Task, { through: "Attribuer" });
-/*Book.belongsTo(Author, { foreignKey: "authorId", as: "authorDetails" });
-Book.belongsTo(Editor, { foreignKey: "editorId", as: "editorDetails" });
-Book.belongsTo(Category, { foreignKey: "categoryId", as: "categoryDetails" });*/
-// Ajouter d'autres associations si nécessaire
+
+Task.belongsTo(User, { foreignKey: 'assignedUserId', as: 'assignedUser' });
 
 export {
   Clan,

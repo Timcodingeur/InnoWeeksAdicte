@@ -1,5 +1,5 @@
 import express from "express";
-import { Clan } from "../models/index.mjs";
+import { Clan, User } from "../models/index.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError } from "sequelize";
 import { auth } from "../auth/auth.mjs";
@@ -14,6 +14,24 @@ clansRouter.get("/", auth, async (req, res) => {
     res.json(success(message, clans));
   } catch (error) {
     const message = "La liste des clans n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
+    res.status(500).json({ message, data: error });
+  }
+});
+// clans.mjs
+
+clansRouter.get("/:id/users", auth, async (req, res) => {
+  try {
+    const clan = await Clan.findByPk(req.params.id, {
+      include: [{ model: User, as: "users" }]
+    });
+    if (!clan) {
+      const message = "Le clan demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+      return res.status(404).json({ message });
+    }
+    const message = `Les utilisateurs du clan ${clan.nom} ont bien été récupérés.`;
+    res.json(success(message, clan.users));
+  } catch (error) {
+    const message = "Les utilisateurs du clan n'ont pas pu être récupérés. Merci de réessayer dans quelques instants.";
     res.status(500).json({ message, data: error });
   }
 });
