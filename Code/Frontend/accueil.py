@@ -1,4 +1,3 @@
-import requests
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -72,7 +71,7 @@ footer_frame = tk.Frame(root, bg="#313131", height=30, bd=0, highlightthickness=
 footer_frame.pack(side="bottom", fill="x")
 
 # Ajout d'un label dans le footer
-footer_label = tk.Label(footer_frame, text="Footer", font=("Helvetica", 12), fg="white", bg="#313131", bd=0)
+footer_label = tk.Label(footer_frame, text="Copyright © Motivapp 2024", font=("Helvetica", 12), fg="white", bg="#313131", bd=0)
 footer_label.pack()
 
 # Création du conteneur pour les pages
@@ -109,18 +108,6 @@ for icon, icon_file in icons:
             canvas.bind("<Button-1>", lambda event, icon=icon: show_frame(frames[icon]))
         buttons.append(canvas)
 
-# Fonction pour récupérer les données des clans depuis l'API
-def fetch_clans():
-    url = "http://localhost:3000/api/clans"
-    headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTcxNzc3MDI2MywiZXhwIjoxNzQ5MzI3ODYzfQ.KUrhF_4F2Eu68m2gPophQG4bcUYF9ds9xitQadisHjA"}
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        data = response.json()
-        return data['data']
-    except requests.exceptions.RequestException as e:
-        return f"Erreur lors de la récupération des données: {e}"
-
 # Définition des classes pour les pages
 class Accueil(tk.Frame):
     def __init__(self, parent, controller):
@@ -130,28 +117,18 @@ class Accueil(tk.Frame):
 
         label = tk.Label(card, text="Nom de la tâche courante", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-
-        # Récupérer les données des clans
-        clans = fetch_clans()
-        desc_text = ""
-        if isinstance(clans, str):
-            desc_text = clans
-        else:
-            for clan in clans:
-                desc_text += f"{clan['nom']} - {clan['description']}\n"
-        
-        desc = tk.Label(card, text=desc_text, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc = tk.Label(card, text="Nombre de point de la mission\nAction à finir pour la tâche courante", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
-        button = tk.Button(card, text="demander à valider la tache", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["Tache"]), relief="flat", bd=0)
+        button = tk.Button(card, text="Obtenir une validation de tâche", font=("Helvetica", 12), bg="#E83030", fg="white", command=lambda: show_frame(frames["Tache"]), relief="flat", bd=0)
         button.pack(pady=20, padx=10)
         button.config(bd=2, relief="solid", highlightbackground="#E83030", highlightthickness=2, pady=5, padx=5)
 
 class Tache(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
-        label = tk.Label(self, text="Page de tâche", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Tâches", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc = tk.Label(self, text="Sélectionnez votre tâche à effectuer", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
 
 class Connexion(tk.Frame):
@@ -159,39 +136,39 @@ class Connexion(tk.Frame):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         label = tk.Label(self, text="Connexion", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc = tk.Label(self, text="Entrez vos informations de connexion", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
 
 class Lootbox(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
-        label = tk.Label(self, text="Page de Lootbox", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Conteneurs à récompenses", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc = tk.Label(self, text="Sélectionnez un ou plusieurs contenurs à acheter avec vos points", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
 
 class Classement(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
-        label = tk.Label(self, text="Page de Classement", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Classement", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc = tk.Label(self, text="Voici tous les meilleurs employés avec leur score", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
 
 class Clan(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
-        label = tk.Label(self, text="Page de Clan", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Clan", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc = tk.Label(self, text="Votre clan ainsi que ses membres et leurs scores", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
 
 class Panier(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
-        label = tk.Label(self, text="Page de Panier", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Panier", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
-        desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
+        desc = tk.Label(self, text="Voici les conteneurs que vous avez sélectionnés", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         desc.pack(pady=10, padx=10)
 
 # Création des pages
