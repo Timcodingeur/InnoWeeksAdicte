@@ -72,6 +72,10 @@ export const UserModel = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    trophee:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     level: {
       type: DataTypes.INTEGER,
       allowNull: false,

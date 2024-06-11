@@ -1,3 +1,4 @@
+// TaskModel
 export const TaskModel = (sequelize, DataTypes) => {
   return sequelize.define(
     "Task",
@@ -41,6 +42,16 @@ export const TaskModel = (sequelize, DataTypes) => {
       },
       nbpoints: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      assignedUserId: {
+        type: DataTypes.INTEGER,
+        allowNull: true, // Peut être null si la tâche n'est pas encore assignée
+      },
+      status: {
+        type: DataTypes.ENUM,
+        values: ['encours', 'fini'],
+        defaultValue: 'encours',
         allowNull: false,
       },
     },

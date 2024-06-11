@@ -42,15 +42,19 @@ const Task = TaskModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
 
 // Définir les associations
+Clan.hasMany(User, { foreignKey: 'fkclan', as: 'users' });
 User.belongsTo(Clan, { foreignKey: "fkclan", as: "clandetail" });
+
 User.belongsToMany(Recompense, { through: Obtenir, foreignKey: 'idUser', otherKey: 'idRecompense' });
 Recompense.belongsToMany(User, { through: Obtenir, foreignKey: 'idRecompense', otherKey: 'idUser' });
+
 Recompense.belongsToMany(Lootbox, { through: Contenir, foreignKey: 'idRecompense', otherKey: 'idLootbox' });
 Lootbox.belongsToMany(Recompense, { through: Contenir, foreignKey: 'idLootbox', otherKey: 'idRecompense' });
+
 Lootbox.belongsToMany(User, { through: Ouvrir, foreignKey: 'idLootbox', otherKey: 'idUser' });
 User.belongsToMany(Lootbox, { through: Ouvrir, foreignKey: 'idUser', otherKey: 'idLootbox' });
-Task.belongsToMany(User, { through: Attribuer, foreignKey: 'idTask', otherKey: 'idUser' });
-User.belongsToMany(Task, { through: Attribuer, foreignKey: 'idUser', otherKey: 'idTask' });
+
+Task.belongsTo(User, { foreignKey: 'assignedUserId', as: 'assignedUser' });
 
 const initDb = () => {
   return sequelize.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true })
@@ -79,6 +83,7 @@ const importClans = async () => {
     await Clan.create({
       nom: clan.nom,
       description: clan.description,
+      level: clan.level
     });
   }
 };
@@ -91,6 +96,7 @@ const importUsers = async () => {
       password: hash,
       email: user.email,
       point: user.point,
+      trophee: user.trophee,
       level: user.level,
       photo: user.photo,
       isadmin: user.isadmin,
@@ -125,6 +131,8 @@ const importTasks = async () => {
       nom: task.nom,
       description: task.description,
       nbpoints: task.nbpoints,
+      assignedUserId: task.assignedUserId || null, // Peut être null
+      status: task.status || 'encours', // Par défaut à 'encours'
     });
   }
 };
