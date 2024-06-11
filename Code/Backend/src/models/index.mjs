@@ -23,7 +23,7 @@ const Attribuer = AttribuerModel(sequelize, DataTypes);
 
 // Définir ici toutes les associations
 Clan.hasMany(User, { foreignKey: 'fkclan', as: 'users' });
-User.belongsTo(Clan, { foreignkey: "fkclan", as: "clandetail" });
+User.belongsTo(Clan, { foreignKey: 'fkclan', as: 'clandetail' });
 
 User.belongsToMany(Recompense, { through: "Obtenir" });
 Recompense.belongsToMany(User, { through: "Obtenir" });

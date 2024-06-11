@@ -42,6 +42,23 @@ tasksRouter.get("/:id", auth, async (req, res) => {
     res.status(500).json({ message, data: error });
   }
 });
+// Route pour récupérer les tâches assignées à un utilisateur spécifique
+tasksRouter.get("/assigned/:userId", auth, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const tasks = await Task.findAll({
+      where: {
+        assignedUserId: userId
+      },
+      order: [["created", "DESC"]]
+    });
+    const message = "La liste des tâches assignées a bien été récupérée.";
+    res.json(success(message, tasks));
+  } catch (error) {
+    const message = "La liste des tâches assignées n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
+    res.status(500).json({ message, data: error });
+  }
+});
 
 // Route pour créer une nouvelle tâche
 tasksRouter.post("/", auth, async (req, res) => {

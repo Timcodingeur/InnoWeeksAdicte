@@ -35,6 +35,28 @@ usersRouter.get("/", auth, async (req, res) => {
     res.status(500).json({ message, data: error });
   }
 });
+// Route pour récupérer les utilisateurs classés par nombre de trophées
+// routes/users.mjs
+usersRouter.get("/classement", auth, async (req, res) => {
+  try {
+    const users = await User.findAll({
+      order: [["trophee", "DESC"]],
+      include: [
+        {
+          model: Clan,
+          as: "clandetail",
+          attributes: ["nom"], // Inclure uniquement le nom du clan
+        },
+      ],
+      attributes: ["id", "name", "trophee", "level"], // Inclure uniquement les champs nécessaires
+    });
+    const message = "La liste des utilisateurs classés a bien été récupérée.";
+    res.json(success(message, users));
+  } catch (error) {
+    const message = "La liste des utilisateurs classés n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
+    res.status(500).json({ message, data: error });
+  }
+});
 
 // Route pour la récupération d'un utilisateur par ID
 usersRouter.get("/:id", auth, async (req, res) => {
@@ -103,6 +125,8 @@ usersRouter.delete("/:id", auth, async (req, res) => {
     res.status(500).json({ message, data: error });
   }
 });
+
+
 
 // Route pour la connexion d'un utilisateur
 usersRouter.post("/login", async (req, res) => {
