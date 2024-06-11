@@ -46,7 +46,7 @@ export const TaskModel = (sequelize, DataTypes) => {
       },
       assignedUserId: {
         type: DataTypes.INTEGER,
-        allowNull: true, // Peut être null si la tâche n'est pas encore assignée
+        allowNull: true,
       },
       status: {
         type: DataTypes.ENUM,
