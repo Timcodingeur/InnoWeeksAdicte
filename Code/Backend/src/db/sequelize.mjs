@@ -96,6 +96,7 @@ const importUsers = async () => {
       password: hash,
       email: user.email,
       point: user.point,
+      trophee: user.trophee,
       level: user.level,
       photo: user.photo,
       isadmin: user.isadmin,
