@@ -24,7 +24,7 @@
 - Peuvent être échangés contre des « loot box » de différentes tailles et sujets pour obtenir des récompenses.
 
 ### Trophées (XP)
-- Gagnés en accomplissant des tâches spécifiques, utilisés pour grimper dans le classement mensuel.
+- Gagnés en accomplissant des tâches spécifiques, utilisées pour grimper dans le classement mensuel.
 
 ## Classement et Saisons
 
