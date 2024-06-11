@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from utils import fetch_tasks, show_frame
+import requests  # Ajouter l'importation de requests
 
 class Tache(tk.Frame):
     def __init__(self, parent, controller):
@@ -15,13 +16,13 @@ class Tache(tk.Frame):
         
         self.select_button = tk.Button(self, text="Sélectionner la tâche", command=self.select_task)
         self.select_button.pack(pady=10)
-        
-        self.load_tasks()
-    
+
     def load_tasks(self):
+        print(f"Token: {self.controller.token}")  # Afficher le jeton pour vérification
         if self.controller.token:
             print("Token found, fetching tasks...")
             tasks = fetch_tasks(self.controller.token)
+            print(f"Fetched tasks: {tasks}")  # Afficher les tâches récupérées pour vérification
             self.task_list.delete(0, tk.END)
             if isinstance(tasks, str):
                 self.task_list.insert(tk.END, tasks)
@@ -51,3 +52,6 @@ class Tache(tk.Frame):
             show_frame(self.controller, self.controller.frames["Accueil"])
         except requests.exceptions.RequestException as e:
             messagebox.showerror("Erreur", f"Erreur lors de l'assignation de la tâche: {e}")
+    
+    def update_data(self):
+        self.load_tasks()

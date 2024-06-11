@@ -71,7 +71,7 @@ root.points_label = tk.Label(info_frame, text="", font=("Helvetica", 12), fg="wh
 root.points_label.pack()
 
 # Ajout des boutons avec des icônes dans la barre latérale
-icons = [("Accueil", "Accueil.webp"), ("Panier", "Panier.png"), ("Clan", "Clan.webp"), ("Tache", "Liste_taches.png"), ("Classement", "Classement.png"), ("Croix", "Sortir.png")]
+icons = [("Accueil", "Accueil.webp"), ("Lootbox", "lootbox.png"), ("Clan", "Clan.webp"), ("Tache", "Liste_taches.png"), ("Classement", "Classement.png"), ("Croix", "Sortir.png")]
 buttons = []
 for icon, icon_file in icons:
     img = resize_image(os.path.join(images_path, icon_file), 50)

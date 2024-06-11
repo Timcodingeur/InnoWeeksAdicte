@@ -6,6 +6,12 @@ def show_frame(controller, frame):
     if controller.token or frame == controller.frames["Connexion"]:
         if frame == controller.frames["Clan"]:
             frame.update_data()
+        elif frame == controller.frames["Tache"]:
+            frame.update_data()
+        elif frame == controller.frames["Accueil"]:
+            frame.update_task()
+        elif frame == controller.frames["Classement"]:
+            frame.update_data()
         frame.tkraise()
     else:
         controller.frames["Connexion"].tkraise()
@@ -67,12 +73,14 @@ def create_rounded_rectangle(canvas, x1, y1, x2, y2, radius=25, **kwargs):
 def fetch_task_info(task_id, token):
     url = f"http://localhost:3000/api/tasks/{task_id}"
     headers = {"Authorization": f"Bearer {token}"}
+    print(f"Fetching task info with token: {token}")
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         data = response.json()
         return data['data']
     except requests.exceptions.RequestException as e:
+        print(f"Failed to fetch task info: {e}")
         return None
 
 def fetch_tasks(token):
@@ -100,3 +108,29 @@ def fetch_clans(token):
     except requests.exceptions.RequestException as e:
         print(f"Failed to fetch clans: {e}")
         return f"Erreur lors de la récupération des clans: {e}"
+
+def fetch_user_tasks(user_id, token):
+    url = f"http://localhost:3000/api/tasks/assigned/{user_id}"
+    headers = {"Authorization": f"Bearer {token}"}
+    print(f"Fetching tasks for user {user_id} with token: {token}")
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return data['data']
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to fetch tasks for user: {e}")
+        return f"Erreur lors de la récupération des tâches assignées: {e}"
+
+def fetch_classement(token):
+    url = "http://localhost:3000/api/users/classement"
+    headers = {"Authorization": f"Bearer {token}"}
+    print(f"Fetching classement with token: {token}")
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return data['data']
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to fetch classement: {e}")
+        return []

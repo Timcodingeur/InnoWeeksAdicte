@@ -1,5 +1,5 @@
 import tkinter as tk
-from utils import fetch_task_info, show_frame, update_user_info
+from utils import fetch_task_info, show_frame, update_user_info, fetch_user_tasks
 
 class Accueil(tk.Frame):
     def __init__(self, parent, controller):
@@ -19,11 +19,11 @@ class Accueil(tk.Frame):
         self.update_task()
     
     def update_task(self):
-        if self.controller.user_data and self.controller.user_data.get('current_task'):
-            task_id = self.controller.user_data['current_task']
-            task_info = fetch_task_info(task_id, self.controller.token)
-            if task_info:
-                self.task_label.config(text=f"Tâche courante: {task_info['nom']} - {task_info['description']}")
+        if self.controller.user_data:
+            tasks = fetch_user_tasks(self.controller.user_data['id'], self.controller.token)
+            if tasks and len(tasks) > 0:
+                current_task = tasks[0]  # Supposons que la première tâche est la tâche courante
+                self.task_label.config(text=f"Tâche courante: {current_task['nom']} - {current_task['description']}")
             else:
                 self.task_label.config(text="Aucune tâche courante")
         else:
