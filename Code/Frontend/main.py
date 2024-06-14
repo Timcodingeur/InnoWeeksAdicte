@@ -52,7 +52,7 @@ footer_frame = tk.Frame(root, bg="#313131", height=30, bd=0, highlightthickness=
 footer_frame.pack(side="bottom", fill="x")
 
 # Ajout d'un label dans le footer
-footer_label = tk.Label(footer_frame, text="Footer", font=("Helvetica", 12), fg="white", bg="#313131", bd=0)
+footer_label = tk.Label(footer_frame, text="© 2024 Motivapp", font=("Helvetica", 12), fg="white", bg="#313131", bd=0)
 footer_label.pack()
 
 # Création du conteneur pour les pages
