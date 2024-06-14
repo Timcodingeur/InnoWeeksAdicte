@@ -7,15 +7,19 @@ class Tache(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         self.controller = controller
+
+        # Configure le cadre principal pour qu'il s'étende
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
         
         label = tk.Label(self, text="Page de tâche", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
-        label.pack(pady=10, padx=10)
-        
+        label.grid(row=0, column=0, pady=10, padx=10, sticky="n")
+
         self.task_list = tk.Listbox(self, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
-        self.task_list.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
-        
+        self.task_list.grid(row=1, column=0, pady=10, padx=10, sticky="nsew")
+
         self.select_button = tk.Button(self, text="Sélectionner la tâche", command=self.select_task)
-        self.select_button.pack(pady=10)
+        self.select_button.grid(row=2, column=0, pady=10, padx=10, sticky="s")
 
     def load_tasks(self):
         print(f"Token: {self.controller.token}")  
@@ -28,7 +32,7 @@ class Tache(tk.Frame):
                 self.task_list.insert(tk.END, tasks)
             else:
                 for task in tasks:
-                    self.task_list.insert(tk.END, f"{task['id']} - {task['nom']} - {task['description']}")
+                    self.task_list.insert(tk.END, f"{task['id']} - {task['nom']} - {task['description']} - {task['nbpoints']}⌬")
         else:
             print("No token found, showing error message.")
             self.task_list.insert(tk.END, "Erreur: Non autorisé. Veuillez vous connecter.")
@@ -55,3 +59,33 @@ class Tache(tk.Frame):
     
     def update_data(self):
         self.load_tasks()
+
+# Exemple de la classe principale d'application
+class Application(tk.Tk):
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self.title("Application de tâches")
+        self.geometry("800x600")
+        
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        
+        self.frames = {}
+        self.token = "your_token_here"
+        self.user_data = {'id': 1}  # Exemple de données utilisateur
+
+        frame = Tache(container, self)
+        self.frames["Tache"] = frame
+        frame.grid(row=0, column=0, sticky="nsew")
+        
+        self.show_frame("Tache")
+    
+    def show_frame(self, page_name):
+        frame = self.frames[page_name]
+        frame.tkraise()
+
+if __name__ == "__main__":
+    app = Application()
+    app.mainloop()
