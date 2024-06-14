@@ -1,5 +1,5 @@
 import express from "express";
-import { Lootbox, Recompense, Contenir } from "../models/index.mjs";
+import { Lootbox, Recompense, Contenir, Obtenir } from "../models/index.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
@@ -18,6 +18,17 @@ lootboxRouter.get("/", auth, async (req, res) => {
   }
 });
 
+
+lootboxRouter.get("image/:image", auth, async (req, res) => {
+  try {
+    let Image=req.params.image;
+
+    res.json(success());
+  } catch (error) {
+    const message = "L'image n'a pas pu être recupéré'";
+    res.status(500).json({ message, data: error });
+  }
+});
 // Route pour récupérer une lootbox par ID
 lootboxRouter.get("/:id", auth, async (req, res) => {
   try {
@@ -50,6 +61,35 @@ lootboxRouter.post("/", auth, async (req, res) => {
     res.status(500).json({ message, data: error });
   }
 });
+// Route pour ouvrir une lootbox et récupérer les récompenses
+// Route pour ouvrir une lootbox et récupérer une récompense aléatoire
+lootboxRouter.post("/:id/ouvrir", auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const lootbox = await Lootbox.findByPk(id, {
+      include: [{ model: Recompense, as: "recompenses" }],
+    });
+    if (!lootbox) {
+      const message = "La lootbox demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
+      return res.status(404).json({ message });
+    }
+    
+    // Sélectionner une récompense aléatoire
+    const recompenses = lootbox.recompenses;
+    if (recompenses.length === 0) {
+      const message = "Cette lootbox ne contient aucune récompense.";
+      return res.status(404).json({ message });
+    }
+    const recompenseAleatoire = recompenses[Math.floor(Math.random() * recompenses.length)];
+    
+    const message = `La lootbox dont l'id vaut ${lootbox.id} a bien été ouverte.`;
+    res.json(success(message, { recompense: recompenseAleatoire }));
+  } catch (error) {
+    const message = "La lootbox n'a pas pu être ouverte. Merci de réessayer dans quelques instants.";
+    res.status(500).json({ message, data: error });
+  }
+});
+
 
 // Route pour mettre à jour une lootbox
 lootboxRouter.put("/:id", auth, async (req, res) => {

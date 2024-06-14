@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-import requests
+from requests import post, exceptions
 from utils import update_user_info, update_user_icon, show_frame
 
 class Connexion(tk.Frame):
@@ -40,7 +40,7 @@ class Connexion(tk.Frame):
         url = "http://localhost:3000/api/users/login"
         data = {'username': username, 'password': password}
         try:
-            response = requests.post(url, json=data)
+            response = post(url, json=data)
             response.raise_for_status()
             result = response.json()
             self.message_label.config(text="Connexion réussie", fg="green")
@@ -50,5 +50,5 @@ class Connexion(tk.Frame):
             self.controller.frames["Profile"].update_user_info(result['data'])
             show_frame(self.controller, self.controller.frames["Accueil"])  # Redirection directe après connexion réussie
             update_user_icon(result['data'].get('photo'), self.controller.user_icon_label, self.controller.images_path)
-        except requests.exceptions.RequestException as e:
+        except exceptions.RequestException as e:
             self.message_label.config(text=f"Erreur de connexion: {e}", fg="red")

@@ -121,6 +121,7 @@ const importLootboxs = async () => {
     await Lootbox.create({
       nom: lootbox.nom,
       prix: lootbox.prix,
+      image: lootbox.image,
     });
   }
 };
