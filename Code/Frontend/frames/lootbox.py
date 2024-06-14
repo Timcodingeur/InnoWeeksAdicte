@@ -5,7 +5,7 @@ import os
 class Lootbox(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
-        label = tk.Label(self, text="Page de Lootbox", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Page de boite a butin", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
 
         card = tk.Frame(self, bg="#D5CFE1", bd=0, highlightthickness=0)
@@ -18,7 +18,7 @@ class Lootbox(tk.Frame):
         cardloot1.pack(pady=10, padx=10, fill="both", expand=True)
 
         # Afficher les informations de l'utilisateur connecté
-        self.user_info_label = tk.Label(cardloot1, text="Lootbox 1", font=("Helvetica", 12), bg="#D5CFE1", fg="black")
+        self.user_info_label = tk.Label(cardloot1, text="butin 1", font=("Helvetica", 12), bg="#D5CFE1", fg="black")
         self.user_info_label.pack(pady=10, padx=10)
 
                 # Chemin de l'image
@@ -36,7 +36,7 @@ class Lootbox(tk.Frame):
         image_label.image = photo  # Garder une référence de l'image
         image_label.pack(pady=10)
 
-        label = tk.Label(cardloot1, text="500", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(cardloot1, text="500⌬", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=8, padx=8)
         
         cardloot2 = tk.Frame(card, bg="#0499F9", bd=0, highlightthickness=0)
@@ -61,7 +61,7 @@ class Lootbox(tk.Frame):
         image_label.image = photo  # Garder une référence de l'image
         image_label.pack(pady=10)
 
-        label = tk.Label(cardloot2, text="500", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(cardloot2, text="5000⌬", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=8, padx=8)
 
         #desc = tk.Label(self, text="Bonjour", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)

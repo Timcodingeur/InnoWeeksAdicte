@@ -20,5 +20,5 @@ class Profile(tk.Frame):
         user_info_text += f"Prénom: {user_data['familyname']}\n"
         user_info_text += f"Email: {user_data['email']}\n"
         user_info_text += f"Niveau: {user_data['level']}\n"
-        user_info_text += f"Points: {user_data['point']}"
+        user_info_text += f"Points: {user_data['point']}⌬"
         self.user_info_label.config(text=user_info_text)
