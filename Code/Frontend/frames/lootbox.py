@@ -19,7 +19,6 @@ class Lootbox(tk.Frame):
         container_frame = tk.Frame(self, bg="#D5CFE1")
         container_frame.pack(side="top", fill="both", expand=True)
 
-
         self.canvas = tk.Canvas(container_frame, bg="#D5CFE1", bd=0, highlightthickness=0)
         self.scrollable_frame = ttk.Frame(self.canvas, style="TFrame")
 
@@ -91,7 +90,7 @@ class Lootbox(tk.Frame):
         label.pack(pady=8, padx=8)
         
         open_button = tk.Button(cardloot, text="Ouvrir", command=lambda: self.open_lootbox(lootbox['id']))
-        open_button.pack(pady=10)
+        open_button.pack(pady=10, padx=10)  # Add padx here for more space if needed
 
     def open_lootbox(self, lootbox_id):
         url = f"http://localhost:3000/api/lootbox/{lootbox_id}/ouvrir"
