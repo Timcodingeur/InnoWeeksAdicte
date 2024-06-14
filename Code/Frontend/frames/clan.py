@@ -21,7 +21,7 @@ class Clan(tk.Frame):
     def update_data(self):
         clans = self.fetch_clans()
         desc_text = ""
-        self.clear_clan_buttons()  # Clear previous buttons
+        self.clear_clan_buttons()  
         if isinstance(clans, str):
             desc_text = clans
         else:

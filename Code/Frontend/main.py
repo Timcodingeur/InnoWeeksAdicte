@@ -28,6 +28,8 @@ root.user_data = None
 base_path = os.path.dirname(__file__)
 images_path = os.path.join(base_path, 'images')
 
+root.iconbitmap(os.path.join(images_path, "icon.ico"))
+
 # Création du cadre pour le header
 header_frame = tk.Frame(root, bg="#313131", height=80, bd=0, highlightthickness=0)
 header_frame.pack(side="top", fill="x")

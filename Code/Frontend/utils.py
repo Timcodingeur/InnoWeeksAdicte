@@ -12,6 +12,8 @@ def show_frame(controller, frame):
             frame.update_task()
         elif frame == controller.frames["Classement"]:
             frame.update_data()
+        elif frame == controller.frames["Lootbox"]:
+            frame.update_data()
         frame.tkraise()
     else:
         controller.frames["Connexion"].tkraise()

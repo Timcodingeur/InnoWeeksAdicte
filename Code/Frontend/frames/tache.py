@@ -18,11 +18,11 @@ class Tache(tk.Frame):
         self.select_button.pack(pady=10)
 
     def load_tasks(self):
-        print(f"Token: {self.controller.token}")  # Afficher le jeton pour vérification
+        print(f"Token: {self.controller.token}")  
         if self.controller.token:
             print("Token found, fetching tasks...")
             tasks = fetch_tasks(self.controller.token)
-            print(f"Fetched tasks: {tasks}")  # Afficher les tâches récupérées pour vérification
+            print(f"Fetched tasks: {tasks}")  
             self.task_list.delete(0, tk.END)
             if isinstance(tasks, str):
                 self.task_list.insert(tk.END, tasks)
@@ -37,7 +37,7 @@ class Tache(tk.Frame):
         selected_index = self.task_list.curselection()
         if selected_index:
             task_info = self.task_list.get(selected_index)
-            task_id = task_info.split(' - ')[0]  # Assuming the task id is part of the task_info string
+            task_id = task_info.split(' - ')[0]  
             self.assign_task(task_id)
     
     def assign_task(self, task_id):
@@ -47,7 +47,7 @@ class Tache(tk.Frame):
         try:
             response = requests.put(url, headers=headers, json=data)
             response.raise_for_status()
-            self.controller.user_data['current_task'] = task_id  # Mettre à jour la tâche courante de l'utilisateur
+            self.controller.user_data['current_task'] = task_id 
             messagebox.showinfo("Succès", "Tâche assignée avec succès")
             show_frame(self.controller, self.controller.frames["Accueil"])
         except requests.exceptions.RequestException as e:

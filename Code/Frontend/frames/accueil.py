@@ -22,7 +22,7 @@ class Accueil(tk.Frame):
         if self.controller.user_data:
             tasks = fetch_user_tasks(self.controller.user_data['id'], self.controller.token)
             if tasks and len(tasks) > 0:
-                current_task = tasks[0]  # Supposons que la première tâche est la tâche courante
+                current_task = tasks[0]  
                 self.task_label.config(text=f"Tâche courante: {current_task['nom']} - {current_task['description']}")
             else:
                 self.task_label.config(text="Aucune tâche courante")
