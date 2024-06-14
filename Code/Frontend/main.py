@@ -18,7 +18,7 @@ from frames.clan import Clan
 root = tk.Tk()
 root.title("Motivapp")
 root.geometry("1024x768")
-root.configure(bg='#313131')
+root.configure(bg='#B7B6C1')
 
 # Stocker le jeton d'authentification
 root.token = None
@@ -28,6 +28,7 @@ root.user_data = None
 base_path = os.path.dirname(__file__)
 images_path = os.path.join(base_path, 'images')
 
+# Définir l'icône de la fenêtre
 root.iconbitmap(os.path.join(images_path, "icon.ico"))
 
 # Création du cadre pour le header
@@ -55,9 +56,12 @@ footer_frame.pack(side="bottom", fill="x")
 footer_label = tk.Label(footer_frame, text="© 2024 Motivapp", font=("Helvetica", 12), fg="white", bg="#313131", bd=0)
 footer_label.pack()
 
-# Création du conteneur pour les pages
-container = tk.Frame(root, bg="#B7B6C1", bd=0, highlightthickness=0)
-container.pack(side="right", expand=True, fill="both")
+# Création du conteneur pour les pages avec un cadre supplémentaire pour centrer le contenu
+container_outer = tk.Frame(root, bg="#B7B6C1", bd=0, highlightthickness=0)
+container_outer.pack(side="right", expand=True, fill="both")
+
+container = tk.Frame(container_outer, width=800, height=600, bg="#B7B6C1", bd=0, highlightthickness=0)
+container.place(relx=0.5, rely=0.5, anchor="center")
 
 # Création de la barre latérale
 sidebar_frame = tk.Frame(root, width=100, bg="#101010", bd=0, highlightthickness=0)
@@ -96,7 +100,6 @@ for F in (Accueil, Tache, Connexion, Lootbox, Classement, Clan, Profile):
     page_name = F.__name__
     frames[page_name] = F(parent=container, controller=root)
     frames[page_name].grid(row=0, column=0, sticky="nsew")
-
 root.frames = frames
 
 # Affichage initial de la page de connexion

@@ -28,8 +28,8 @@ User.belongsTo(Clan, { foreignKey: 'fkclan', as: 'clandetail' });
 User.belongsToMany(Recompense, { through: "Obtenir" });
 Recompense.belongsToMany(User, { through: "Obtenir" });
 
-Recompense.belongsToMany(Lootbox, { through: "Contenir" });
-Lootbox.belongsToMany(Recompense, { through: "Contenir" });
+Recompense.belongsToMany(Lootbox, { through: Contenir, as: "lootboxes" });
+Lootbox.belongsToMany(Recompense, { through: Contenir, as: "recompenses" });
 
 Lootbox.belongsToMany(User, { through: "Ouvrir" });
 User.belongsToMany(Lootbox, { through: "Ouvrir" });
