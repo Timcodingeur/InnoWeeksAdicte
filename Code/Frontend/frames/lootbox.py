@@ -7,7 +7,13 @@ import io
 
 class Lootbox(tk.Frame):
     def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, bg="#D5CFE1", bd=0, highlightthickness=0)
+        self.controller = controller
+        self.lootboxes = []
+        self.create_widgets()
 
+    def create_widgets(self):
+        label = tk.Label(self, text="Page de Lootbox", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
 
         container_frame = tk.Frame(self, bg="#D5CFE1")
@@ -28,7 +34,8 @@ class Lootbox(tk.Frame):
 
         self.canvas.bind_all("<MouseWheel>", self._on_mouse_wheel)
 
-
+    def _on_mouse_wheel(self, event):
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
     def update_data(self):
         self.load_lootboxes()
@@ -68,9 +75,9 @@ class Lootbox(tk.Frame):
         label = tk.Label(cardloot, text=lootbox['nom'], font=("Helvetica", 12), bg="#B7B6C1", fg="black")
         label.pack(pady=10, padx=10)
         
-        image_path = os.path.join('images', lootbox.get('image', 'lootbox.png')) 
+        image_path = os.path.join('frontend', 'images', lootbox.get('image', 'lootbox.png')) 
         if not os.path.exists(image_path):
-            image_path = os.path.join('images', 'lootbox.png')
+            image_path = os.path.join('frontend', 'images', 'lootbox.png')
         image = Image.open(image_path)
         image = image.resize((150, 150), Image.LANCZOS)  
         photo = ImageTk.PhotoImage(image)
@@ -78,7 +85,8 @@ class Lootbox(tk.Frame):
         image_label = tk.Label(cardloot, image=photo, bg="#B7B6C1")
         image_label.image = photo  
         image_label.pack(pady=10)
-
+        
+        label = tk.Label(cardloot, text=str(lootbox['prix']), font=("Helvetica", 14), bg="#B7B6C1", fg="black", bd=0)
         label.pack(pady=8, padx=8)
         
         open_button = tk.Button(cardloot, text="Ouvrir", command=lambda: self.open_lootbox(lootbox['id']))
@@ -119,7 +127,31 @@ class Lootbox(tk.Frame):
         image_label.image = photo 
         image_label.pack(pady=10)
 
+        self.animate_text(reward_label, recompense['nom'])
 
+        close_button = tk.Button(reward_window, text="Fermer", command=reward_window.destroy)
+        close_button.pack(pady=10)
+
+    def animate_text(self, label, text):
+        def rotate_text():
+            current_text = label.cget("text")
+            new_text = current_text[-1] + current_text[:-1]
+            label.config(text=new_text)
+            label.after(200, rotate_text)
+        
+        label.config(text=text)
+        rotate_text()
+
+    def display_default_message(self, message):
+       
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+
+        card = tk.Frame(self.scrollable_frame, bg="#D5CFE1", bd=2, relief="solid", width=350, height=200)
+        card.pack_propagate(0)
+        card.pack(pady=10, padx=10, fill="both", expand=True)
+        
+        label = tk.Label(card, text=message, font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=8, padx=8)
         
         cardloot = tk.Frame(card, bg="#B7B6C1", bd=2, relief="solid")
@@ -128,7 +160,7 @@ class Lootbox(tk.Frame):
         label = tk.Label(cardloot, text="Lootbox par défaut", font=("Helvetica", 12), bg="#B7B6C1", fg="black")
         label.pack(pady=10, padx=10)
         
-        image_path = os.path.join('images', 'lootbox.png')  
+        image_path = os.path.join('frontend', 'images', 'lootbox.png')  
         image = Image.open(image_path)
         image = image.resize((150, 150), Image.LANCZOS) 
         photo = ImageTk.PhotoImage(image)
