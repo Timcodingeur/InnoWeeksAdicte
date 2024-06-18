@@ -17,7 +17,7 @@ from frames.clan import Clan
 # Création de la fenêtre principale
 root = tk.Tk()
 root.title("Motivapp")
-root.geometry("1024x768")
+root.geometry("1524x768")
 root.configure(bg='#B7B6C1')
 
 # Stocker le jeton d'authentification
