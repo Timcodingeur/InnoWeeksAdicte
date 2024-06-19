@@ -10,9 +10,6 @@ class Clan(tk.Frame):
         label = tk.Label(self, text="Page de Clan", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
         
-        self.clan_desc = tk.Label(self, text="", font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
-        self.clan_desc.pack(pady=10, padx=10)
-        
         self.user_list = tk.Listbox(self, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
         self.user_list.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
         
@@ -29,8 +26,6 @@ class Clan(tk.Frame):
                 button = tk.Button(self, text=f"{clan['nom']} - Niveau {clan['level']}", font=("Helvetica", 12), command=lambda c=clan: self.show_clan_users(c))
                 button.pack(pady=5)
                 self.clan_buttons.append(button)
-
-        self.clan_desc.config(text=desc_text)
 
     def clear_clan_buttons(self):
         for button in self.clan_buttons:
