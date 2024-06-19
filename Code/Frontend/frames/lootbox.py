@@ -86,11 +86,11 @@ class Lootbox(tk.Frame):
         image_label.image = photo  
         image_label.pack(pady=10)
         
-        label = tk.Label(cardloot, text=str(lootbox['prix']), font=("Helvetica", 14), bg="#B7B6C1", fg="black", bd=0)
+        label = tk.Label (cardloot, text=f"{lootbox['prix']}⌬", font=("Helvetica", 14), bg="#B7B6C1", fg="black", bd=0)
         label.pack(pady=8, padx=8)
         
-        open_button = tk.Button(cardloot, text="Ouvrir", command=lambda: self.open_lootbox(lootbox['id']))
-        open_button.pack(pady=10, padx=10)  # Add padx here for more space if needed
+        open_button = tk.Button(image_label, text="Ouvrir", command=lambda: self.open_lootbox(lootbox['id']))
+        open_button.pack(pady=50, padx=50)  # Add padx here for more space if needed
 
     def open_lootbox(self, lootbox_id):
         url = f"http://localhost:3000/api/lootbox/{lootbox_id}/ouvrir"
