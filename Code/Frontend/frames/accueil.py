@@ -51,6 +51,6 @@ class Accueil(tk.Frame):
         else:
             self.toggle_btn.config(image=self.show_image)
             self.toggle_btn.config(bg= "#E83030")
-            show_frame(self.controller, self.controller.frames["Tache"])
+            
 
         # Optionally, you can pass the task info to the next frame or handle the task validation here
