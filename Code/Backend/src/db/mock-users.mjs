@@ -5,7 +5,7 @@ export let users = [
     familyname: "Admin",
     username: "etml",
     email: "etml.admin@etml.com",
-    password: "etmladmin1",
+    password: "etml",
     trophee: 201,
     point: 12345,
     level: 48,
