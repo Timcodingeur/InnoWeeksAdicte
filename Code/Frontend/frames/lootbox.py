@@ -14,7 +14,7 @@ class Lootbox(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        label = tk.Label(self, text="Page de boîtes à butin aléatoire", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Boîtes à butin aléatoire", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
 
         container_frame = tk.Frame(self, bg="#D5CFE1")
