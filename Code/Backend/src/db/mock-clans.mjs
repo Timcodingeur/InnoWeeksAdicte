@@ -7,13 +7,13 @@ export let clans = [
   },
   {
     id: 2,
-    nom: "Boxe",
+    nom: "Secrétariat",
     description: "j'aime le pain plus que toi",
     level: 11
   },
   {
     id: 3,
-    nom: "Judo",
+    nom: "Relations clients",
     description: "j'aime le pain plus que toi",
     level: 2
   },
@@ -25,7 +25,7 @@ export let clans = [
   },
   {
     id: 5,
-    nom: "Destructeur de planete",
+    nom: "Direction",
     description: "j'aime le pain plus que toi",
     level:9
   },

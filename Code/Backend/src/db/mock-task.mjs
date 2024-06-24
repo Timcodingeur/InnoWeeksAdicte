@@ -2,13 +2,13 @@ export let tasks = [
   {
     id: 1,
     nom: "Backend site",
-    description: "Créer un backend pour enregister l'utilisateur",
+    description: "Créer un backend pour enregistrer l'utilisateur",
     nbpoints: 480,
   },
   {
     id: 2,
     nom: "Frontend site",
-    description: "Faire une page d'accueil fonctionnel",
+    description: "Faire une page d'accueil fonctionnelle",
     nbpoints: 340,
   },
   {
@@ -38,7 +38,7 @@ export let tasks = [
   {
     id: 7,
     nom: "Frontend site",
-    description: "Refaire l'affichage des produit",
+    description: "Refaire l'affichage des produits",
     nbpoints: 280,
   },
   {
@@ -56,7 +56,7 @@ export let tasks = [
   {
     id: 10,
     nom: "Frontend site",
-    description: "Modifier la page d'achat des produits pour y ajouter le choix de la companie de livraison",
+    description: "Modifier la page d'achat des produits pour y ajouter le choix de la compagnie de livraison",
     nbpoints: 340,
   },
 ];
