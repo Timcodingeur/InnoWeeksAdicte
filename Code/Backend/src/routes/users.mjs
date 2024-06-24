@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User, Clan, Recompense, Task, Lootbox, Contenir, Obtenir, Ouvrir, Attribuer } from "../models/index.mjs";
+import { User, Clan} from "../models/index.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";

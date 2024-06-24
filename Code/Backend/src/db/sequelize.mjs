@@ -2,12 +2,8 @@ import { Sequelize, DataTypes } from "sequelize";
 import bcrypt from "bcrypt";
 
 // Import des modèles
-import { AttribuerModel } from "../models/attribuer.mjs";
 import { ClanModel } from "../models/clan.mjs";
-import { ContenirModel } from "../models/contenir.mjs";
 import { LootboxModel } from "../models/lootbox.mjs";
-import { ObtenirModel } from "../models/obtenir.mjs";
-import { OuvrirModel } from "../models/ouvrir.mjs";
 import { RecompenseModel } from "../models/recompense.mjs";
 import { TaskModel } from "../models/task.mjs";
 import { UserModel } from "../models/user.mjs";
@@ -15,14 +11,10 @@ import { ChatMessageModel } from "../models/chat.mjs"; // Ajout du modèle ChatM
 
 // Import des mocks
 import { clans } from "./mock-clans.mjs";
-import { contenir } from "./mock-contenir.mjs";
 import { lootboxs } from "./mock-lootboxs.mjs";
-import { obtenir } from "./mock-obtenir.mjs";
-import { ouvrir } from "./mock-ouvrir.mjs";
 import { recompenses } from "./mock-recompenses.mjs";
 import { tasks } from "./mock-task.mjs";
 import { users } from "./mock-users.mjs";
-import { attribuer } from "./mock-attribuer.mjs";
 import { chatMessages } from "./mock-chat.mjs"; // Ajout du mock chatMessages
 
 const sequelize = new Sequelize("db_adictive", "root", "root", {
@@ -32,34 +24,15 @@ const sequelize = new Sequelize("db_adictive", "root", "root", {
   logging: false,
 });
 
-const Attribuer = AttribuerModel(sequelize, DataTypes);
 const Clan = ClanModel(sequelize, DataTypes);
-const Contenir = ContenirModel(sequelize, DataTypes);
 const Lootbox = LootboxModel(sequelize, DataTypes);
-const Obtenir = ObtenirModel(sequelize, DataTypes);
-const Ouvrir = OuvrirModel(sequelize, DataTypes);
 const Recompense = RecompenseModel(sequelize, DataTypes);
 const Task = TaskModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
 const ChatMessage = ChatMessageModel(sequelize, DataTypes); // Définir le modèle ChatMessage
 
 // Définir les associations
-Clan.hasMany(User, { foreignKey: 'fkclan', as: 'users' });
-User.belongsTo(Clan, { foreignKey: "fkclan", as: "clandetail" });
 
-User.belongsToMany(Recompense, { through: Obtenir, foreignKey: 'idUser', otherKey: 'idRecompense' });
-Recompense.belongsToMany(User, { through: Obtenir, foreignKey: 'idRecompense', otherKey: 'idUser' });
-
-Recompense.belongsToMany(Lootbox, { through: Contenir, foreignKey: 'idRecompense', otherKey: 'idLootbox' });
-Lootbox.belongsToMany(Recompense, { through: Contenir, foreignKey: 'idLootbox', otherKey: 'idRecompense' });
-
-Lootbox.belongsToMany(User, { through: Ouvrir, foreignKey: 'idLootbox', otherKey: 'idUser' });
-User.belongsToMany(Lootbox, { through: Ouvrir, foreignKey: 'idUser', otherKey: 'idLootbox' });
-
-Task.belongsTo(User, { foreignKey: 'assignedUserId', as: 'assignedUser' });
-
-User.hasMany(ChatMessage, { foreignKey: 'userId', as: 'messages' });
-ChatMessage.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 const initDb = () => {
   return sequelize.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true })
@@ -77,11 +50,7 @@ const importData = async () => {
   await importRecompenses();
   await importLootboxs();
   await importTasks();
-  await importContenir();
-  await importObtenir();
-  await importOuvrir();
-  await importAttribuer();
-  await importChatMessages(); // Ajout de l'importation des messages de chat
+  await importChatMessages(); 
 };
 
 const importClans = async () => {
@@ -144,61 +113,8 @@ const importTasks = async () => {
   }
 };
 
-const importContenir = async () => {
-  for (const entry of contenir) {
-    await Contenir.create({
-      idLootbox: entry.idLootbox,
-      idRecompense: entry.idRecompense,
-      LootboxId: entry.idLootbox,
-      RecompenseId: entry.idRecompense,
-    });
-  }
-};
 
-const importObtenir = async () => {
-  for (const entry of obtenir) {
-    if (!entry.idUser || !entry.idRecompense) {
-      console.error('Invalid data in mock-obtenir:', entry);
-      continue;
-    }
-    await Obtenir.create({
-      idUser: entry.idUser,
-      idRecompense: entry.idRecompense,
-      UserId: entry.idUser,
-      RecompenseId: entry.idRecompense,
-    });
-  }
-};
 
-const importOuvrir = async () => {
-  for (const entry of ouvrir) {
-    if (!entry.idUser || !entry.idLootbox) {
-      console.error('Invalid data in mock-ouvrir:', entry);
-      continue;
-    }
-    await Ouvrir.create({
-      idUser: entry.idUser,
-      idLootbox: entry.idLootbox,
-      UserId: entry.idUser,
-      LootboxId: entry.idLootbox,
-    });
-  }
-};
-
-const importAttribuer = async () => {
-  for (const entry of attribuer) {
-    if (!entry.idUser || !entry.idTask) {
-      console.error('Invalid data in mock-attribuer:', entry);
-      continue;
-    }
-    await Attribuer.create({
-      idUser: entry.idUser,
-      idTask: entry.idTask,
-      UserId: entry.idUser,
-      TaskId: entry.idTask,
-    });
-  }
-};
 
 const importChatMessages = async () => {
   for (const entry of chatMessages) {
@@ -213,4 +129,5 @@ const importChatMessages = async () => {
   }
 };
 
-export { sequelize, initDb, Attribuer, Clan, Contenir, Lootbox, Obtenir, Ouvrir, Recompense, Task, User, ChatMessage };
+export { sequelize, initDb, Clan, Lootbox, Recompense, Task, User, ChatMessage };
+
