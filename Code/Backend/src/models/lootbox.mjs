@@ -1,6 +1,6 @@
 export const LootboxModel = (sequelize, DataTypes) => {
   return sequelize.define(
-    "Lootboxs",
+    "Lootbox",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -27,15 +27,16 @@ export const LootboxModel = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      image:{
+      image: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
+      created: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+        field: "created", // Assurez-vous que le champ créé est correctement spécifié
+      },
     },
-    {
-      timestamps: true,
-      createdAt: "created",
-      updateAt: false,
-    }
   );
 };

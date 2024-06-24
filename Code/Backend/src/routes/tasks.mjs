@@ -1,5 +1,5 @@
 import express from "express";
-import { Task, User, Attribuer } from "../models/index.mjs";
+import { Task, User } from "../models/index.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";

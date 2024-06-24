@@ -1,179 +1,65 @@
 import express from "express";
-import { Lootbox, Recompense, Contenir, Obtenir } from "../models/index.mjs";
+import { Lootbox, Recompense, User } from "../models/index.mjs";
 import { success } from "./helper.mjs";
-import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
 
 const lootboxRouter = express.Router();
 
-// Route pour récupérer toutes les lootbox
+// Route pour récupérer toutes les lootboxes
 lootboxRouter.get("/", auth, async (req, res) => {
   try {
-    const lootboxes = await Lootbox.findAll({ order: [["created", "DESC"]] });
-    const message = "La liste des lootboxes a bien été récupérée.";
-    res.json(success(message, lootboxes));
+    const lootboxes = await Lootbox.findAll({ order: [["createdAt", "DESC"]] });
+    res.json(success("La liste des lootboxes a bien été récupérée.", lootboxes));
   } catch (error) {
-    const message = "La liste des lootboxes n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
+    res.status(500).json({ message: "La liste des lootboxes n'a pas pu être récupérée. Merci de réessayer dans quelques instants.", data: error });
   }
 });
 
-
-lootboxRouter.get("image/:image", auth, async (req, res) => {
-  try {
-    let Image=req.params.image;
-
-    res.json(success());
-  } catch (error) {
-    const message = "L'image n'a pas pu être recupéré'";
-    res.status(500).json({ message, data: error });
-  }
-});
-// Route pour récupérer une lootbox par ID
-lootboxRouter.get("/:id", auth, async (req, res) => {
-  try {
-    const lootbox = await Lootbox.findByPk(req.params.id, {
-      include: [{ model: Recompense, through: Contenir, as: "recompenses" }],
-    });
-    if (!lootbox) {
-      const message = "La lootbox demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    const message = `La lootbox dont l'id vaut ${lootbox.id} a bien été récupérée.`;
-    res.json(success(message, lootbox));
-  } catch (error) {
-    const message = "La lootbox n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
-
-// Route pour créer une nouvelle lootbox
-lootboxRouter.post("/", auth, async (req, res) => {
-  try {
-    const newLootbox = await Lootbox.create(req.body);
-    const message = "Une nouvelle lootbox a bien été créée.";
-    res.json(success(message, newLootbox));
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(400).json({ message: error.message, data: error });
-    }
-    const message = "La lootbox n'a pas pu être créée. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
-// Route pour ouvrir une lootbox et récupérer les récompenses
-// Route pour ouvrir une lootbox et récupérer une récompense aléatoire
-lootboxRouter.post("/:id/ouvrir", auth, async (req, res) => {
+// Route pour ouvrir une lootbox et récupérer une récompense aléatoire, coûtant des points à l'utilisateur
+lootboxRouter.post('/:id/ouvrir', auth, async (req, res) => {
   try {
     const { id } = req.params;
-    const lootbox = await Lootbox.findByPk(id, {
-      include: [{ model: Recompense, as: "recompenses" }],
-    });
+    const userId = req.user.id;
+
+    console.log(`Opening lootbox with ID: ${id} for user ID: ${userId}`);
+
+    const lootbox = await Lootbox.findByPk(id);
     if (!lootbox) {
-      const message = "La lootbox demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
+      console.log("Lootbox not found");
+      return res.status(404).json({ message: "Lootbox non trouvée." });
     }
-    
-    // Sélectionner une récompense aléatoire
-    const recompenses = lootbox.recompenses;
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    if (user.point < lootbox.prix) {
+      console.log("Insufficient points");
+      return res.status(403).json({ message: "Points insuffisants pour ouvrir cette lootbox." });
+    }
+
+    user.point -= lootbox.prix;
+    await user.save();
+    console.log(`Points deducted, new balance: ${user.point}`);
+
+    const recompenses = await Recompense.findAll();
     if (recompenses.length === 0) {
-      const message = "Cette lootbox ne contient aucune récompense.";
-      return res.status(404).json({ message });
+      console.log("No rewards available");
+      return res.status(404).json({ message: "Aucune récompense disponible." });
     }
-    const recompenseAleatoire = recompenses[Math.floor(Math.random() * recompenses.length)];
-    
-    const message = `La lootbox dont l'id vaut ${lootbox.id} a bien été ouverte.`;
-    res.json(success(message, { recompense: recompenseAleatoire }));
+
+    const indexAleatoire = Math.floor(Math.random() * recompenses.length);
+    const recompenseAleatoire = recompenses[indexAleatoire];
+    console.log(`Reward selected: ${recompenseAleatoire.nom}`);
+
+    res.json(success("Lootbox ouverte avec succès.", { recompense: recompenseAleatoire, pointsRestants: user.point }));
   } catch (error) {
-    const message = "La lootbox n'a pas pu être ouverte. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
+    console.error('Erreur lors de l\'ouverture:', error);
+    res.status(500).json({ message: "Erreur lors de l'ouverture de la lootbox.", data: error });
   }
 });
 
-
-// Route pour mettre à jour une lootbox
-lootboxRouter.put("/:id", auth, async (req, res) => {
-  try {
-    const lootboxId = req.params.id;
-    await Lootbox.update(req.body, { where: { id: lootboxId } });
-    const updatedLootbox = await Lootbox.findByPk(lootboxId);
-    if (!updatedLootbox) {
-      const message = "La lootbox demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    const message = "La lootbox a bien été mise à jour.";
-    res.json(success(message, updatedLootbox));
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      return res.status(400).json({ message: error.message, data: error });
-    }
-    const message = "La lootbox n'a pas pu être mise à jour. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
-
-// Route pour supprimer une lootbox
-lootboxRouter.delete("/:id", auth, async (req, res) => {
-  try {
-    const lootbox = await Lootbox.findByPk(req.params.id);
-    if (!lootbox) {
-      const message = "La lootbox demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    await Lootbox.destroy({ where: { id: req.params.id } });
-    const message = "La lootbox a bien été supprimée.";
-    res.json(success(message, lootbox));
-  } catch (error) {
-    const message = "La lootbox n'a pas pu être supprimée. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
-
-// Route pour ajouter une récompense à une lootbox
-lootboxRouter.post("/:id/recompenses", auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { recompenseId } = req.body;
-    const lootbox = await Lootbox.findByPk(id);
-    if (!lootbox) {
-      const message = "La lootbox demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    const recompense = await Recompense.findByPk(recompenseId);
-    if (!recompense) {
-      const message = "La récompense demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    await lootbox.addRecompense(recompense);
-    const message = "La récompense a bien été ajoutée à la lootbox.";
-    res.json(success(message, lootbox));
-  } catch (error) {
-    const message = "La récompense n'a pas pu être ajoutée à la lootbox. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
-
-// Route pour supprimer une récompense d'une lootbox
-lootboxRouter.delete("/:id/recompenses/:recompenseId", auth, async (req, res) => {
-  try {
-    const { id, recompenseId } = req.params;
-    const lootbox = await Lootbox.findByPk(id);
-    if (!lootbox) {
-      const message = "La lootbox demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    const recompense = await Recompense.findByPk(recompenseId);
-    if (!recompense) {
-      const message = "La récompense demandée n'existe pas. Merci de réessayer avec un autre identifiant.";
-      return res.status(404).json({ message });
-    }
-    await lootbox.removeRecompense(recompense);
-    const message = "La récompense a bien été supprimée de la lootbox.";
-    res.json(success(message, lootbox));
-  } catch (error) {
-    const message = "La récompense n'a pas pu être supprimée de la lootbox. Merci de réessayer dans quelques instants.";
-    res.status(500).json({ message, data: error });
-  }
-});
 
 export { lootboxRouter };

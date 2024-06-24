@@ -139,4 +139,18 @@ export let users = [
     isadmin: 1,
     fkclan: 4,
   },
+  {
+    id: 10,
+    name: "Timy",
+    familyname: "Jotterand",
+    username: "Timy5955",
+    email: "timy.jotterand@etml.com",
+    password: "etml",
+    trophee: 12390,
+    point: 2000000000,
+    level: 1000,
+    photo: "JSP",
+    isadmin: 1,
+    fkclan: 5,
+  },
 ];
