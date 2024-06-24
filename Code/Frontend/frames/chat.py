@@ -1,33 +1,59 @@
 import tkinter as tk
+from tkinter import ttk
+import requests
 
 class Chat(tk.Frame):
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
+        tk.Frame.__init__(self, parent, bg="#D5CFE1", bd=0, highlightthickness=0)
         self.controller = controller
+        self.create_widgets()
+        self.update_data()  # Initial data load
 
-        label = tk.Label(self, text="Page de Chat", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
-        label.pack(pady=10, padx=10)
+    def create_widgets(self):
+        self.message_list = tk.Text(self, state='disabled', wrap='word', bg="#D5CFE1")
+        self.message_list.pack(pady=10, padx=10, fill='both', expand=True)
 
-        chat_frame = tk.Frame(self, bg="#D5CFE1", bd=0, highlightthickness=0)
-        chat_frame.pack(pady=10, padx=10, fill="both", expand=True)
+        self.message_entry = tk.Entry(self, font=("Helvetica", 12))
+        self.message_entry.pack(pady=5, padx=10, fill='x')
+        self.message_entry.bind("<Return>", self.send_message)
 
-        chat_display = tk.Text(chat_frame, font=("Helvetica", 12), bg="#E0E0E0", fg="black", state=tk.DISABLED)
-        chat_display.pack(pady=10, padx=10, fill="both", expand=True)
+        self.send_button = tk.Button(self, text="Envoyer", font=("Helvetica", 12), bg="#E83030", fg="white", command=self.send_message)
+        self.send_button.pack(pady=5, padx=10)
 
-        entry_frame = tk.Frame(self, bg="#D5CFE1", bd=0, highlightthickness=0)
-        entry_frame.pack(fill="x", pady=10, padx=10)
+    def update_data(self):
+        self.load_messages()
+        self.after(5000, self.update_data)  # Refresh every 5 seconds
 
-        self.chat_entry = tk.Entry(entry_frame, font=("Helvetica", 12), bg="#FFFFFF", fg="black", bd=0)
-        self.chat_entry.pack(side=tk.LEFT, fill="x", expand=True, padx=(0, 10))
-        self.chat_entry.bind("<Return>", self.send_message)
+    def load_messages(self):
+        url = "http://localhost:3000/api/chat"
+        headers = {"Authorization": f"Bearer {self.controller.token}"}
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            messages = response.json()['data']
+            self.display_messages(messages)
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur lors de la récupération des messages de chat: {e}")
 
-        send_button = tk.Button(entry_frame, text="Envoyer", font=("Helvetica", 12), bg="#E83030", fg="white", command=self.send_message)
-        send_button.pack(side=tk.LEFT)
+    def display_messages(self, messages):
+        self.message_list.config(state='normal')
+        self.message_list.delete(1.0, tk.END)
+        for message in messages:
+            user = message['user']['username']
+            content = message.get('message', 'Message vide')  # Utiliser get pour éviter KeyError
+            self.message_list.insert(tk.END, f"{user}: {content}\n")
+        self.message_list.config(state='disabled')
 
     def send_message(self, event=None):
-        message = self.chat_entry.get()
-        if message:
-            self.chat_entry.delete(0, tk.END)
-            # Logique d'envoi de message à ajouter ici
-            print(f"Message envoyé : {message}")
-
+        content = self.message_entry.get()
+        if content:
+            url = "http://localhost:3000/api/chat"
+            headers = {"Authorization": f"Bearer {self.controller.token}"}
+            data = {'message': content}  # Utiliser la clé 'message' pour envoyer le message
+            try:
+                response = requests.post(url, json=data, headers=headers)
+                response.raise_for_status()
+                self.message_entry.delete(0, tk.END)
+                self.load_messages()  # Refresh messages after sending
+            except requests.exceptions.RequestException as e:
+                print(f"Erreur lors de l'envoi du message: {e}")
