@@ -88,7 +88,7 @@ class Connexion(tk.Frame):
             update_user_icon(result['data'].get('photo'), self.controller.user_icon_label, self.controller.images_path)
             self.destroy()  
         except exceptions.RequestException:
-            self.message_label.config(text="Mot de passe ou nom d'utilisateur incorrecte", fg="red")
+            self.message_label.config(text="Mot de passe ou nom d'utilisateur incorrect", fg="red")
 
 class MainApplication(tk.Tk):
     def __init__(self, *args, **kwargs):
