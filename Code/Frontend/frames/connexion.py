@@ -4,17 +4,17 @@ from requests import post, exceptions
 from utils import update_user_info, update_user_icon, show_frame, resize_image
 import os
 
-hide_path = r'C:\Users\px25twk\Downloads\InnoWeeksAdicte-main2\InnoWeeksAdicte-main\Code\Frontend\Images\hide.png'
-show_path = r'C:\Users\px25twk\Downloads\InnoWeeksAdicte-main2\InnoWeeksAdicte-main\Code\Frontend\Images\show.png'
-images_path = 'Images'
+
+base_path = os.path.dirname(__file__)
+images_path = os.path.join(base_path, '..', 'Images')
 
 class Connexion(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         self.controller = controller
         
-        self.hide_image = resize_image(os.path.join(os.path.dirname(__file__), '..', images_path, "hide.png"), 16)
-        self.show_image = resize_image(os.path.join(os.path.dirname(__file__), '..', images_path, "show.png"), 16)
+        self.hide_image = resize_image(os.path.join(images_path, "hide.png"), 16)
+        self.show_image = resize_image(os.path.join(images_path, "show.png"), 16)
 
         card = tk.Frame(self, bg="#D5CFE1", bd=0, highlightthickness=0)
         card.pack(pady=10, padx=10, fill="both", expand=True)
@@ -73,7 +73,6 @@ class Connexion(tk.Frame):
             self.message_label.config(text="Veuillez entrer un nom d'utilisateur et un mot de passe")
             return
 
-        # Requête de connexion
         url = "http://localhost:3000/api/users/login"
         data = {'username': username, 'password': password}
         try:
@@ -85,11 +84,11 @@ class Connexion(tk.Frame):
             self.controller.user_data = result['data']
             update_user_info(result['data'], self.controller.level_label, self.controller.points_label)
             self.controller.frames["Profile"].update_user_info(result['data'])
-            show_frame(self.controller, self.controller.frames["Accueil"])  # Redirection vers Accueil après connexion réussie
+            show_frame(self.controller, self.controller.frames["Accueil"])  
             update_user_icon(result['data'].get('photo'), self.controller.user_icon_label, self.controller.images_path)
-            self.destroy()  # Détruire le cadre de connexion après la connexion réussie
+            self.destroy()  
         except exceptions.RequestException:
-            self.message_label.config(text=f"Mot de passe ou nom d'utilisateur incorrecte", fg="red")
+            self.message_label.config(text="Mot de passe ou nom d'utilisateur incorrecte", fg="red")
 
 class MainApplication(tk.Tk):
     def __init__(self, *args, **kwargs):

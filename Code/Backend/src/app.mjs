@@ -10,6 +10,7 @@ import { ouvrirRouter } from "./routes/ouvrir.mjs";
 import { recompensesRouter } from "./routes/recompenses.mjs";
 import { tasksRouter } from "./routes/tasks.mjs";
 import { usersRouter } from "./routes/users.mjs";
+import { chatRouter } from './routes/chat.mjs';
 
 import { sequelize, initDb } from "./db/sequelize.mjs";
 
@@ -60,6 +61,7 @@ app.use("/api/ouvrir", ouvrirRouter);
 app.use("/api/recompenses", recompensesRouter);
 app.use("/api/tasks", tasksRouter);
 app.use("/api/users", usersRouter);
+app.use('/api/chat', chatRouter);
 
 app.listen(port,() => {
   console.log(`Example app listening on port ${port}`);
