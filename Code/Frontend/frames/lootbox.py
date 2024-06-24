@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 import requests
 import os
 import io
+from utils import fetch_and_update_user_info
 
 class Lootbox(tk.Frame):
     def __init__(self, parent, controller):
@@ -99,6 +100,7 @@ class Lootbox(tk.Frame):
             recompense = response.json()['data']['recompense']
             self.display_reward(recompense)
             fetch_and_update_user_info(self.controller)  # Mise à jour des informations de l'utilisateur
+            self.update_data()  # Met à jour les lootboxes pour refléter les changements
         except requests.exceptions.RequestException as e:
             messagebox.showerror("Erreur", f"Erreur lors de l'ouverture de la lootbox: {e}")
 
@@ -126,5 +128,3 @@ class Lootbox(tk.Frame):
     def display_default_message(self, message):
         label = tk.Label(self.scrollable_frame, text=message, font=("Helvetica", 14), bg="#D5CFE1", fg="black")
         label.pack(pady=20, padx=20)
-
-# Assurez-vous que `fetch_and_update_user_info` est correctement définie dans votre contrôleur principal

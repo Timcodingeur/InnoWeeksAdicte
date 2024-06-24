@@ -147,7 +147,7 @@ export let users = [
     email: "timy.jotterand@etml.com",
     password: "etml",
     trophee: 12390,
-    point: 173400,
+    point: 2000000000,
     level: 1000,
     photo: "JSP",
     isadmin: 1,

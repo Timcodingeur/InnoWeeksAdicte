@@ -31,7 +31,9 @@ def fetch_and_update_user_info(controller):
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         user_data = response.json()['data']
+        controller.user_data = user_data  # Met à jour les données utilisateur dans le contrôleur
         update_user_info(user_data, controller.level_label, controller.points_label)
+        controller.frames["Profile"].update_user_info(user_data)  # Met à jour les informations dans le profil
     except requests.exceptions.RequestException as e:
         print(f"Erreur lors de la récupération des informations de l'utilisateur : {e}")
 
