@@ -12,7 +12,7 @@ class Tache(tk.Frame):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
         
-        label = tk.Label(self, text="Page de tâche", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Tâches", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.grid(row=0, column=0, pady=10, padx=10, sticky="n")
 
         self.task_list = tk.Listbox(self, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)

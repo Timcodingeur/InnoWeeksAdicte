@@ -36,7 +36,7 @@ class Accueil(tk.Frame):
                     
                     task_label = tk.Entry(task_frame, font=("Helvetica", 12))
 
-                    self.toggle_btn = tk.Button(task_frame, image=self.show_image, font=("Helvetica", 8), bg="#E83030", fg="white", command=self.toggle_image)
+                    self.toggle_btn = tk.Button(task_frame, image=self.hide_image, font=("Helvetica", 8), bg="#00FF0C", fg="white", command=self.toggle_image)
                     self.toggle_btn.pack(side=tk.LEFT, padx=(0, 0))
 
             else:

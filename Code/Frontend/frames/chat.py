@@ -6,6 +6,8 @@ class Chat(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, bg="#D5CFE1", bd=0, highlightthickness=0)
         self.controller = controller
+        label = tk.Label(self, text="Espace discussions", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label.pack(pady=10, padx=10)
         self.create_widgets()
         self.update_data()  # Initial data load
 

@@ -7,7 +7,7 @@ class Clan(tk.Frame):
         tk.Frame.__init__(self, parent, bg="#B7B6C1", bd=0, highlightthickness=0)
         self.controller = controller
         
-        label = tk.Label(self, text="Page de Clan", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
+        label = tk.Label(self, text="Sections", font=("Helvetica", 14), bg="#D5CFE1", fg="black", bd=0)
         label.pack(pady=10, padx=10)
         
         self.user_list = tk.Listbox(self, font=("Helvetica", 12), bg="#D5CFE1", fg="black", bd=0)
