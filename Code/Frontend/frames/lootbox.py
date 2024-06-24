@@ -10,6 +10,7 @@ class Lootbox(tk.Frame):
         tk.Frame.__init__(self, parent, bg="#D5CFE1", bd=0, highlightthickness=0)
         self.controller = controller
         self.lootboxes = []
+        self.images_path = os.path.join(os.path.dirname(__file__), '..', 'images')
         self.create_widgets()
 
     def create_widgets(self):
@@ -75,9 +76,10 @@ class Lootbox(tk.Frame):
         label = tk.Label(cardloot, text=lootbox['nom'], font=("Helvetica", 12), bg="#B7B6C1", fg="black")
         label.pack(pady=10, padx=10)
         
-        image_path = os.path.join('frontend', 'images', lootbox.get('image', 'lootbox.png')) 
+        image_path = os.path.join(self.images_path, lootbox.get('image', 'lootbox.png'))
         if not os.path.exists(image_path):
-            image_path = os.path.join('frontend', 'images', 'lootbox.png')
+            image_path = os.path.join(self.images_path, 'lootbox.png')
+        
         image = Image.open(image_path)
         image = image.resize((150, 150), Image.LANCZOS)  
         photo = ImageTk.PhotoImage(image)
@@ -86,11 +88,11 @@ class Lootbox(tk.Frame):
         image_label.image = photo  
         image_label.pack(pady=10)
         
-        label = tk.Label (cardloot, text=f"{lootbox['prix']}⌬", font=("Helvetica", 14), bg="#B7B6C1", fg="black", bd=0)
+        label = tk.Label(cardloot, text=f"{lootbox['prix']}⌬", font=("Helvetica", 14), bg="#B7B6C1", fg="black", bd=0)
         label.pack(pady=8, padx=8)
         
-        open_button = tk.Button(image_label, text="Ouvrir", command=lambda: self.open_lootbox(lootbox['id']))
-        open_button.pack(pady=50, padx=50)  # Add padx here for more space if needed
+        open_button = tk.Button(cardloot, text="Ouvrir", command=lambda: self.open_lootbox(lootbox['id']))
+        open_button.pack(pady=10)
 
     def open_lootbox(self, lootbox_id):
         url = f"http://localhost:3000/api/lootbox/{lootbox_id}/ouvrir"
@@ -143,7 +145,6 @@ class Lootbox(tk.Frame):
         rotate_text()
 
     def display_default_message(self, message):
-       
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
 
@@ -160,7 +161,7 @@ class Lootbox(tk.Frame):
         label = tk.Label(cardloot, text="Lootbox par défaut", font=("Helvetica", 12), bg="#B7B6C1", fg="black")
         label.pack(pady=10, padx=10)
         
-        image_path = os.path.join('frontend', 'images', 'lootbox.png')  
+        image_path = os.path.join(self.images_path, 'lootbox.png')  
         image = Image.open(image_path)
         image = image.resize((150, 150), Image.LANCZOS) 
         photo = ImageTk.PhotoImage(image)
