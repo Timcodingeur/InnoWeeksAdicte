@@ -6,13 +6,13 @@ def show_frame(controller, frame):
     if controller.token or frame == controller.frames["Connexion"]:
         if frame == controller.frames["Clan"]:
             frame.update_data()
+        elif frame == controller.frames["Lootbox"]:
+            frame.update_data()
         elif frame == controller.frames["Tache"]:
             frame.update_data()
         elif frame == controller.frames["Accueil"]:
             frame.update_task()
         elif frame == controller.frames["Classement"]:
-            frame.update_data()
-        elif frame == controller.frames["Lootbox"]:
             frame.update_data()
         frame.tkraise()
     else:

@@ -13,6 +13,8 @@ from frames.profile import Profile
 from frames.lootbox import Lootbox
 from frames.classement import Classement
 from frames.clan import Clan
+from frames.chat import Chat
+from frames.battlepass import BattlePass  # Assurez-vous d'importer la nouvelle page de battlepass
 
 # Création de la fenêtre principale
 root = tk.Tk()
@@ -45,8 +47,21 @@ if logo_img:
 user_icon_img = resize_image(os.path.join(images_path, "Connection.png"), 50)
 if user_icon_img:
     user_icon_label = tk.Label(header_frame, image=user_icon_img, bg="#313131", bd=0)
-    user_icon_label.pack(side="right", padx=10)
     user_icon_label.bind("<Button-1>", lambda event: show_frame(root, root.frames["Profile"]))  # Redirection vers la page de profil après connexion
+
+    # Bouton Classement
+    classement_img = resize_image(os.path.join(images_path, "Classement.png"), 30)  # Taille de l'image ajustée
+    if classement_img:
+        classement_button_frame = tk.Frame(header_frame, bg="#313131", bd=0, highlightthickness=0)
+        classement_button_canvas = tk.Canvas(classement_button_frame, width=40, height=40, bg="#313131", highlightthickness=0, bd=0)
+        create_rounded_rectangle(classement_button_canvas, 0, 0, 40, 40, radius=15, fill="#D5CFE1", outline="")
+        classement_button_canvas.create_image(20, 20, image=classement_img)
+        classement_button_canvas.image = classement_img
+        classement_button_canvas.pack()
+        classement_button_canvas.bind("<Button-1>", lambda event: show_frame(root, root.frames["Classement"]))
+
+        classement_button_frame.pack(side="right", padx=10)
+        user_icon_label.pack(side="right", padx=10, before=classement_button_frame)
 
 # Création du cadre pour le footer
 footer_frame = tk.Frame(root, bg="#313131", height=30, bd=0, highlightthickness=0)
@@ -77,7 +92,7 @@ root.points_label = tk.Label(info_frame, text="", font=("Helvetica", 12), fg="wh
 root.points_label.pack()
 
 # Ajout des boutons avec des icônes dans la barre latérale
-icons = [("Accueil", "Accueil.webp"), ("Lootbox", "lootbox.png"), ("Clan", "Clan.webp"), ("Tache", "Liste_taches.png"), ("Classement", "Classement.png"), ("Croix", "Sortir.png")]
+icons = [("Accueil", "Accueil.webp"), ("Lootbox", "lootbox.png"), ("Clan", "Clan.webp"), ("Tache", "Liste_taches.png"), ("BattlePass", "battlepass.png"), ("Croix", "Sortir.png")]
 buttons = []
 for icon, icon_file in icons:
     img = resize_image(os.path.join(images_path, icon_file), 50)
@@ -96,11 +111,23 @@ for icon, icon_file in icons:
 
 # Création des pages
 frames = {}
-for F in (Accueil, Tache, Connexion, Lootbox, Classement, Clan, Profile):
+for F in (Accueil, Tache, Connexion, Lootbox, Classement, Clan, Profile, Chat, BattlePass):
     page_name = F.__name__
     frames[page_name] = F(parent=container, controller=root)
     frames[page_name].grid(row=0, column=0, sticky="nsew")
 root.frames = frames
+
+# Ajout du bouton de chat en bas à droite
+chat_icon_img = resize_image(os.path.join(images_path, "chat.png"), 30)  # Taille réduite de l'image
+if chat_icon_img:
+    chat_button_frame = tk.Frame(root, bg="#B7B6C1", bd=0, highlightthickness=0)
+    chat_button_frame.place(relx=0.95, rely=0.95, anchor="se")
+    chat_button_canvas = tk.Canvas(chat_button_frame, width=90, height=30, bg="#B7B6C1", highlightthickness=0, bd=0)
+    create_rounded_rectangle(chat_button_canvas, 0, 0, 90, 30, radius=15, fill="#D5CFE1", outline="")
+    chat_button_canvas.create_image(45, 15, image=chat_icon_img)
+    chat_button_canvas.image = chat_icon_img
+    chat_button_canvas.pack()
+    chat_button_canvas.bind("<Button-1>", lambda event: show_frame(root, root.frames["Chat"]))
 
 # Affichage initial de la page de connexion
 show_frame(root, root.frames["Connexion"])
