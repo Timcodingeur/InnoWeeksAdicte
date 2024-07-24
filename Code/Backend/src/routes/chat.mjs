@@ -24,7 +24,7 @@ chatRouter.get('/', auth, async (req, res) => {
 chatRouter.post("/", auth, async (req, res) => {
   try {
     const { message } = req.body;
-    const userId = req.userId; // Assuming userId is stored in the request object by the auth middleware
+    const userId = req.userId; 
 
     const newMessage = await ChatMessage.create({
       userId,

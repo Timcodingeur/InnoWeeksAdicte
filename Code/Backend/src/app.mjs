@@ -2,16 +2,22 @@ import express from "express";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 
-// Import des routes
-import { clansRouter } from "./routes/clans.mjs";
-import { lootboxRouter } from "./routes/lootbox.mjs";
-import { recompensesRouter } from "./routes/recompenses.mjs";
-import { tasksRouter } from "./routes/tasks.mjs";
-import { usersRouter } from "./routes/users.mjs";
-import { chatRouter } from './routes/chat.mjs';
 
-// Configuration de la base de données et importation du Swagger
-import { sequelize, initDb } from "./db/sequelize.mjs";
+import { sequelize } from './models/index.mjs';
+import { chatRouter } from './routes/chat.mjs';
+import { clansRouter } from './routes/clans.mjs';
+import { lootboxRouter } from './routes/lootbox.mjs';
+import { recompensesRouter } from './routes/recompenses.mjs';
+import { tasksRouter } from './routes/tasks.mjs';
+import { usersRouter } from './routes/users.mjs';
+import { titreRouter } from './routes/titre.mjs';
+import { typeEvenementRouter } from './routes/typeEvenement.mjs';
+import { evenementRouter } from './routes/evenement.mjs';
+import { pointRouter } from './routes/point.mjs';
+import { battlePassRouter } from './routes/battlePass.mjs';
+
+
+import { initDb } from "./db/sequelize.mjs";
 import { swaggerSpec } from "./swagger.mjs";
 
 const app = express();
@@ -42,13 +48,17 @@ initDb();
 app.get("/", (req, res) => {
   res.send("Bienvenue sur l'API REST de notre service !");
 });
-
-app.use("/api/clans", clansRouter);
-app.use("/api/lootbox", lootboxRouter);
-app.use("/api/recompenses", recompensesRouter);
-app.use("/api/tasks", tasksRouter);
-app.use("/api/users", usersRouter);
-app.use('/api/chat', chatRouter);
+app.use('/chat', chatRouter);
+app.use('/clans', clansRouter);
+app.use('/lootbox', lootboxRouter);
+app.use('/recompenses', recompensesRouter);
+app.use('/tasks', tasksRouter);
+app.use('/users', usersRouter);
+app.use('/titres', titreRouter);
+app.use('/types-evenement', typeEvenementRouter);
+app.use('/evenements', evenementRouter);
+app.use('/points', pointRouter);
+app.use('/battle-passes', battlePassRouter);
 
 // Écoute du serveur sur le port spécifié
 app.listen(port, () => {

@@ -35,7 +35,7 @@ export const LootboxModel = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
-        field: "created", // Assurez-vous que le champ créé est correctement spécifié
+        field: "created", 
       },
     },
   );

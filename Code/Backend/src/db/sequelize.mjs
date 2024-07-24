@@ -7,7 +7,12 @@ import { LootboxModel } from "../models/lootbox.mjs";
 import { RecompenseModel } from "../models/recompense.mjs";
 import { TaskModel } from "../models/task.mjs";
 import { UserModel } from "../models/user.mjs";
-import { ChatMessageModel } from "../models/chat.mjs"; // Ajout du modèle ChatMessage
+import { ChatMessageModel } from "../models/chat.mjs";
+import { TitreModel } from "../models/titre.mjs"; 
+import { TypeEvenementModel } from "../models/typeEvenement.mjs"; 
+import { EvenementModel } from "../models/evenement.mjs";
+import { PointModel } from "../models/point.mjs"; 
+import { BattlePassModel } from "../models/battlePass.mjs";
 
 // Import des mocks
 import { clans } from "./mock-clans.mjs";
@@ -15,7 +20,12 @@ import { lootboxs } from "./mock-lootboxs.mjs";
 import { recompenses } from "./mock-recompenses.mjs";
 import { tasks } from "./mock-task.mjs";
 import { users } from "./mock-users.mjs";
-import { chatMessages } from "./mock-chat.mjs"; // Ajout du mock chatMessages
+import { chatMessages } from "./mock-chat.mjs";
+import { titres } from "./mock-titres.mjs"; 
+import { typesEvenement } from "./mock-typesEvenement.mjs"; 
+import { evenements } from "./mock-evenements.mjs"; 
+import { points } from "./mock-points.mjs"; 
+import { battlePasses } from "./mock-battlePasses.mjs"; 
 
 const sequelize = new Sequelize("db_adictive", "root", "root", {
   host: "localhost",
@@ -29,9 +39,13 @@ const Lootbox = LootboxModel(sequelize, DataTypes);
 const Recompense = RecompenseModel(sequelize, DataTypes);
 const Task = TaskModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
-const ChatMessage = ChatMessageModel(sequelize, DataTypes); // Définir le modèle ChatMessage
+const ChatMessage = ChatMessageModel(sequelize, DataTypes); 
+const Titre = TitreModel(sequelize, DataTypes); 
+const TypeEvenement = TypeEvenementModel(sequelize, DataTypes); 
+const Evenement = EvenementModel(sequelize, DataTypes); 
+const Point = PointModel(sequelize, DataTypes); 
+const BattlePass = BattlePassModel(sequelize, DataTypes); 
 
-// Définir les associations
 
 
 const initDb = () => {
@@ -50,7 +64,12 @@ const importData = async () => {
   await importRecompenses();
   await importLootboxs();
   await importTasks();
-  await importChatMessages(); 
+  await importChatMessages();
+  await importTitres();
+  await importTypesEvenement();
+  await importEvenements();
+  await importPoints();
+  await importBattlePasses();
 };
 
 const importClans = async () => {
@@ -113,9 +132,6 @@ const importTasks = async () => {
   }
 };
 
-
-
-
 const importChatMessages = async () => {
   for (const entry of chatMessages) {
     if (!entry.userId || !entry.message) {
@@ -129,5 +145,63 @@ const importChatMessages = async () => {
   }
 };
 
-export { sequelize, initDb, Clan, Lootbox, Recompense, Task, User, ChatMessage };
+const importTitres = async () => {
+  for (const titre of titres) {
+    await Titre.create({
+      nom: titre.nom,
+      obtention: titre.obtention,
+    });
+  }
+};
 
+const importTypesEvenement = async () => {
+  for (const typeEvenement of typesEvenement) {
+    await TypeEvenement.create({
+      description: typeEvenement.description,
+      nom: typeEvenement.nom,
+    });
+  }
+};
+
+const importEvenements = async () => {
+  for (const evenement of evenements) {
+    await Evenement.create({
+      nom: evenement.nom,
+      idTypeEvenement: evenement.idTypeEvenement,
+    });
+  }
+};
+
+const importPoints = async () => {
+  for (const point of points) {
+    await Point.create({
+      typeDePoint: point.typeDePoint,
+      courteDescription: point.courteDescription,
+    });
+  }
+};
+
+const importBattlePasses = async () => {
+  for (const battlePass of battlePasses) {
+    await BattlePass.create({
+      nom: battlePass.nom,
+      description: battlePass.description,
+    });
+  }
+};
+
+export {
+  sequelize,
+  initDb,
+  Clan,
+  Lootbox,
+  Recompense,
+  Task,
+  User,
+  ChatMessage,
+  Titre,
+  TypeEvenement,
+  Evenement,
+  Point,
+  BattlePass
+};

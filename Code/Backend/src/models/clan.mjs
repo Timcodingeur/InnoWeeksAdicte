@@ -30,7 +30,7 @@ export const ClanModel = (sequelize, DataTypes) => {
       level: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 1,  // Niveau par défaut
+        defaultValue: 1,  
       },
     },
     {
