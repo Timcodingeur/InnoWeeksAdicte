@@ -21,6 +21,7 @@ import { PossederModel } from "../models/Posseder.mjs";
 import { AvoirModel } from "../models/Avoir.mjs";
 import { AiderModel } from "../models/Aider.mjs";
 import { AttribuerModel } from "../models/Attribuer.mjs";
+import { OuvrirModel } from "../models/Ouvrir.mjs";
 
 // Import des mocks
 import { clans } from "./mock-clans.mjs";
@@ -42,6 +43,7 @@ import { posseder } from "./mock-posseder.mjs";
 import { avoir } from "./mock-avoir.mjs";
 import { aider } from "./mock-aider.mjs";
 import { attribuer } from "./mock-attribuer.mjs";
+import { ouvrir } from "./mock-ouvrir.mjs";
 
 const sequelize = new Sequelize("db_adictive", "root", "root", {
   host: "localhost",
@@ -69,6 +71,7 @@ const Posseder = PossederModel(sequelize, DataTypes);
 const Avoir = AvoirModel(sequelize, DataTypes);
 const Aider = AiderModel(sequelize, DataTypes);
 const Attribuer = AttribuerModel(sequelize, DataTypes);
+const Ouvrir = OuvrirModel(sequelize, DataTypes);
 
 const initDb = () => {
   return sequelize
@@ -101,6 +104,69 @@ const importData = async () => {
   await importAvoir();
   await importAider();
   await importAttribuer();
+  await importOuvrir();
+  User.belongsToMany(Recompense, { through: Obtenir, foreignKey: "iduser" });
+  Recompense.belongsToMany(User, {
+    through: Obtenir,
+    foreignKey: "idrecompense",
+  });
+
+  User.belongsToMany(Lootbox, { through: Ouvrir, foreignKey: "iduser" });
+  Lootbox.belongsToMany(User, {
+    through: Ouvrir,
+    foreignKey: "idLootbox",
+  });
+
+  User.belongsToMany(Task, { through: Aider, foreignKey: "iduser" });
+  Task.belongsToMany(User, {
+    through: Aider,
+    foreignKey: "idtask",
+  });
+
+  User.belongsToMany(Task, { through: Attribuer, foreignKey: "iduser" });
+  Task.belongsToMany(User, {
+    through: Attribuer,
+    foreignKey: "idtask",
+  });
+
+  User.belongsToMany(Titre, { through: Avoir, foreignKey: "iduser" });
+  Titre.belongsToMany(User, {
+    through: Avoir,
+    foreignKey: "idtitre",
+  });
+
+  User.belongsToMany(Point, { through: Posseder, foreignKey: "iduser" });
+  Point.belongsToMany(User, {
+    through: Posseder,
+    foreignKey: "idpoint",
+  });
+
+  Lootbox.belongsToMany(Point, {
+    through: Demander,
+    foreignKey: "idlootbox",
+  });
+  Point.belongsToMany(Lootbox, {
+    through: Demander,
+    foreignKey: "idpoint",
+  });
+
+  Lootbox.belongsToMany(Recompense, {
+    through: Contenir,
+    foreignKey: "idlootbox",
+  });
+  Recompense.belongsToMany(Lootbox, {
+    through: Contenir,
+    foreignKey: "idrecompense",
+  });
+
+  BattlePass.belongsToMany(Recompense, {
+    through: Mettre,
+    foreignKey: "idbattlepass",
+  });
+  Recompense.belongsToMany(BattlePass, {
+    through: Mettre,
+    foreignKey: "idrecompense",
+  });
 };
 
 const importClans = async () => {
@@ -291,6 +357,15 @@ const importAttribuer = async () => {
     await Attribuer.create({
       iduser: attribu.iduser,
       idtask: attribu.idtask,
+    });
+  }
+};
+
+const importOuvrir = async () => {
+  for (const ouvr of ouvrir) {
+    await Ouvrir.create({
+      idLootbox: ouvr.idLootbox,
+      idUser: ouvr.idUser,
     });
   }
 };

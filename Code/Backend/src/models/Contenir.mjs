@@ -3,10 +3,18 @@ export const ContenirModel = (sequelize, DataTypes) => {
     idrecompense: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Recompenses",
+        key: "id",
+      },
     },
     idlootbox: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Lootboxes",
+        key: "id",
+      },
     },
   });
 };

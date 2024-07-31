@@ -3,10 +3,18 @@ export const DemanderModel = (sequelize, DataTypes) => {
     idlootbox: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Lootboxes",
+        key: "id",
+      },
     },
     idpoint: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Points",
+        key: "id",
+      },
     },
     nbpoints: {
       type: DataTypes.INTEGER,
