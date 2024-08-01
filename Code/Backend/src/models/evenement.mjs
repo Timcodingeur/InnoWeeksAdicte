@@ -1,5 +1,7 @@
 export const EvenementModel = (sequelize, DataTypes) => {
-    return sequelize.define('Evenement', {
+  return sequelize.define(
+    "Evenement",
+    {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -9,12 +11,17 @@ export const EvenementModel = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      idTypeEvenement: {
+      fkTypeEvenement: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: "TypeEvenements",
+          key: "id",
+        },
       },
-    }, {
+    },
+    {
       timestamps: false,
-    });
-  };
-  
+    }
+  );
+};

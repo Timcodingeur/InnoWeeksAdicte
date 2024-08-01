@@ -1,17 +1,17 @@
 export let users = [
   {
     id: 1,
-    name: "Etml",
+    name: "daccord",
     familyname: "Admin",
-    username: "etml",
-    email: "etml.admin@etml.com",
-    password: "etml",
+    username: "daccord",
+    email: "daccord.admin@daccord.com",
+    password: "daccord",
     trophee: 201,
     point: 12345,
     level: 48,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 1,
+    fkClan: 1,
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ export let users = [
     level: 23,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 2,
+    fkClan: 2,
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ export let users = [
     level: 5,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 3,
+    fkClan: 3,
   },
   {
     id: 4,
@@ -53,7 +53,7 @@ export let users = [
     level: 34,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 4,
+    fkClan: 4,
   },
   {
     id: 5,
@@ -67,7 +67,7 @@ export let users = [
     level: 84,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 5,
+    fkClan: 5,
   },
   {
     id: 6,
@@ -81,7 +81,7 @@ export let users = [
     level: 32,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 1,
+    fkClan: 1,
   },
   {
     id: 7,
@@ -95,7 +95,8 @@ export let users = [
     level: 34,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 1,
+    fkClan: 1,
+    fkLigue: 3,
   },
   {
     id: 8,
@@ -109,7 +110,8 @@ export let users = [
     level: 64,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 2,
+    fkClan: 2,
+    fkLigue: 4,
   },
   {
     id: 9,
@@ -123,7 +125,8 @@ export let users = [
     level: 26,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 3,
+    fkClan: 3,
+    fkLigue: 4,
   },
   {
     id: 10,
@@ -137,7 +140,9 @@ export let users = [
     level: 21,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 4,
+    fkClan: 4,
+    fkRecompenseChoisi: 1,
+    fkLigue: 2,
   },
   {
     id: 11,
@@ -151,6 +156,8 @@ export let users = [
     level: 1000,
     photo: "JSP",
     isadmin: 1,
-    fkclan: 5,
+    fkClan: 5,
+    fkRecompenseChoisi: 4,
+    fkLigue: 3,
   },
 ];

@@ -72,7 +72,7 @@ export const UserModel = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    trophee:{
+    trophee: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -88,9 +88,29 @@ export const UserModel = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    fkclan: {
+    fkClan: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: "Clans",
+        key: "id",
+      },
+    },
+    fkLigue: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Ligues",
+        key: "id",
+      },
+    },
+    fkRecompenseChoisi: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: "Recompenses",
+        key: "id",
+      },
     },
   });
 };

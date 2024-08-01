@@ -1,5 +1,4 @@
 export const evenements = [
-    {id: 1, nom: "rois du pain", idTypeEvenement: 1 },
-    { id: 2,nom: "Fête de l'ETML (genr on lance du pain)", idTypeEvenement: 2 },
-  ];
-  
+  { id: 1, nom: "rois du pain", fkTypeEvenement: 1 },
+  { id: 2, nom: "Fête de l'ETML (genre on lance du pain)", fkTypeEvenement: 2 },
+];

@@ -44,15 +44,35 @@ export const TaskModel = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      assignedUserId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       status: {
         type: DataTypes.ENUM,
-        values: ['encours', 'fini'],
-        defaultValue: 'encours',
+        values: ["encours", "fini"],
+        defaultValue: "encours",
         allowNull: false,
+      },
+      fkEvenement: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "Evenements",
+          key: "id",
+        },
+      },
+      fkBattlePass: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "BattlePasses",
+          key: "id",
+        },
+      },
+      fkPoint: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Points",
+          key: "id",
+        },
       },
     },
     {

@@ -22,6 +22,7 @@ import { AvoirModel } from "../models/Avoir.mjs";
 import { AiderModel } from "../models/Aider.mjs";
 import { AttribuerModel } from "../models/Attribuer.mjs";
 import { OuvrirModel } from "../models/Ouvrir.mjs";
+import { LigueModel } from "../models/ligue.mjs";
 
 // Import des mocks
 import { clans } from "./mock-clans.mjs";
@@ -44,6 +45,7 @@ import { avoir } from "./mock-avoir.mjs";
 import { aider } from "./mock-aider.mjs";
 import { attribuer } from "./mock-attribuer.mjs";
 import { ouvrir } from "./mock-ouvrir.mjs";
+import { ligues } from "./mock-ligue.mjs";
 
 const sequelize = new Sequelize("db_adictive", "root", "root", {
   host: "localhost",
@@ -72,6 +74,7 @@ const Avoir = AvoirModel(sequelize, DataTypes);
 const Aider = AiderModel(sequelize, DataTypes);
 const Attribuer = AttribuerModel(sequelize, DataTypes);
 const Ouvrir = OuvrirModel(sequelize, DataTypes);
+const Ligue = LigueModel(sequelize, DataTypes);
 
 const initDb = () => {
   return sequelize
@@ -86,16 +89,19 @@ const initDb = () => {
 
 const importData = async () => {
   await importClans();
-  await importUsers();
+  await importLigues();
   await importRecompenses();
   await importLootboxs();
-  await importTasks();
-  await importChatMessages();
   await importTitres();
   await importTypesEvenement();
-  await importEvenements();
   await importPoints();
   await importBattlePasses();
+
+  // Mettre après car liaisons à faire
+  await importEvenements();
+  await importTasks();
+  await importUsers();
+  await importChatMessages();
   await importObtenir();
   await importContenir();
   await importMettre();
@@ -105,6 +111,7 @@ const importData = async () => {
   await importAider();
   await importAttribuer();
   await importOuvrir();
+
   User.belongsToMany(Recompense, { through: Obtenir, foreignKey: "iduser" });
   Recompense.belongsToMany(User, {
     through: Obtenir,
@@ -167,6 +174,29 @@ const importData = async () => {
     through: Mettre,
     foreignKey: "idrecompense",
   });
+
+  Clan.hasMany(User, { foreignKey: "fkClan" });
+  User.belongsTo(Clan, { foreignKey: "fkClan" });
+
+  Recompense.hasMany(User, { foreignKey: "fkRecompenseChoisi" });
+  User.belongsTo(Recompense, { foreignKey: "fkRecompenseChoisi" });
+
+  // ligue
+
+  Evenement.hasMany(Task, { foreignKey: "fkEvenement" });
+  Task.belongsTo(Evenement, { foreignKey: "fkEvenement" });
+
+  BattlePass.hasMany(Task, { foreignKey: "fkBattlePass" });
+  Task.belongsTo(BattlePass, { foreignKey: "fkBattlePass" });
+
+  Point.hasMany(Task, { foreignKey: "fkPoint" });
+  Task.belongsTo(Point, { foreignKey: "fkPoint" });
+
+  TypeEvenement.hasMany(Evenement, { foreignKey: "fkTypeEvenement" });
+  Evenement.belongsTo(TypeEvenement, { foreignKey: "fkTypeEvenement" });
+
+  User.hasMany(ChatMessage, { foreignKey: "fkUser" });
+  ChatMessage.belongsTo(User, { foreignKey: "fkUser" });
 };
 
 const importClans = async () => {
@@ -191,9 +221,11 @@ const importUsers = async () => {
       level: user.level,
       photo: user.photo,
       isadmin: user.isadmin,
-      fkclan: user.fkclan,
+      fkClan: user.fkClan,
       name: user.name,
       familyname: user.familyname,
+      fkLigue: user.fkLigue || null,
+      fkRecompenseChoisi: user.fkRecompenseChoisi || null,
     });
   }
 };
@@ -223,20 +255,22 @@ const importTasks = async () => {
       nom: task.nom,
       description: task.description,
       nbpoints: task.nbpoints,
-      assignedUserId: task.assignedUserId || null,
       status: task.status || "encours",
+      fkEvenement: task.fkEvenement || null,
+      fkBattlePass: task.fkBattlePass || null,
+      fkPoint: task.fkPoint,
     });
   }
 };
 
 const importChatMessages = async () => {
   for (const entry of chatMessages) {
-    if (!entry.userId || !entry.message) {
+    if (!entry.fkUser || !entry.message) {
       console.error("Invalid data in mock-chat:", entry);
       continue;
     }
     await ChatMessage.create({
-      userId: entry.userId,
+      fkUser: entry.fkUser,
       message: entry.message,
     });
   }
@@ -264,7 +298,7 @@ const importEvenements = async () => {
   for (const evenement of evenements) {
     await Evenement.create({
       nom: evenement.nom,
-      idTypeEvenement: evenement.idTypeEvenement,
+      fkTypeEvenement: evenement.fkTypeEvenement,
     });
   }
 };
@@ -366,6 +400,15 @@ const importOuvrir = async () => {
     await Ouvrir.create({
       idLootbox: ouvr.idLootbox,
       idUser: ouvr.idUser,
+    });
+  }
+};
+
+const importLigues = async () => {
+  for (const ligue of ligues) {
+    await Ligue.create({
+      nom: ligue.nom,
+      nbPb: ligue.nbPb,
     });
   }
 };
